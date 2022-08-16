@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Naver Editor</title>
+    <script type="text/javascript" src="/libs/smarteditor/js/service/HuskyEZCreator.js" charset="utf-8"></script>
+    <script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+
+    <script>
+
+      function save(){
+        oEditors.getById["txtContent"].exec("UPDATE_CONTENTS_FIELD", []);
+        //스마트 에디터 값을 텍스트컨텐츠로 전달
+        var content = document.getElementById("smartEditor").value;
+        alert(document.getElementById("txtContent").value);
+        // 값을 불러올 땐 document.get으로 받아오기
+        return;
+      }
+
+    </script>
+</head>
+<body>
+
+<textarea id="txtContent" rows="10" cols="100" style="width: 100%;"></textarea>
+<!-- textarea 밑에 script 작성하기 -->
+<script id="smartEditor" type="text/javascript">
+  var oEditors = [];
+  nhn.husky.EZCreator.createInIFrame({
+    oAppRef: oEditors,
+    elPlaceHolder: "txtContent",  //textarea ID 입력
+    sSkinURI: "/libs/smarteditor/SmartEditor2Skin.html",  //martEditor2Skin.html 경로 입력
+    fCreator: "createSEditor2",
+    htParams : {
+      bUseToolbar : true,
+      bUseVerticalResizer : true,
+      bUseModeChanger : true
+    }
+  });
+</script>
+
+<div id="se2_sample" style="margin:10px 0;">
+  <input type="button" onclick="save();" value="본문 내용 가져오기">
+</div>
+</body>
+</html>

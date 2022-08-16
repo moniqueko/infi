@@ -10,12 +10,10 @@ import java.util.Date;
 
 @Component
 @AllArgsConstructor
-@NoArgsConstructor
 public class Schedule {
 
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
-
-    @Scheduled(cron = "0 30 * * * * ?")
+    @Scheduled(cron = "0 30 * * * ?")
     public void scheduled (){
         System.out.println("The time is now "+ dateFormat.format(new Date()));
     }
