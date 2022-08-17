@@ -37,9 +37,14 @@ public class MainController {
 
         return "schedule";
     }
-    @GetMapping("/editor")//글쓰기화면
+    @GetMapping("/editor")// 네이버 에디터
     public String naverEditor(){
         return "editor";
+    }
+
+    @GetMapping("/summerEditor")//썸머노트 에디터
+    public String summerEditor(){
+        return "summerEditor";
     }
 
     @GetMapping("/list")
@@ -57,13 +62,22 @@ public class MainController {
         return "view";
     }
 
+//    @GetMapping("/edit/{uuid}") //네이버 에디터 수정
+//    public String editBoard(Model model, @PathVariable("uuid") String uuid){
+//        BoardVo view = boardService.listAllbyNum(uuid);
+//
+//        model.addAttribute("view", view);
+//
+//        return "edit";
+//    }
+
     @GetMapping("/edit/{uuid}")
-    public String editBoard(Model model, @PathVariable("uuid") String uuid){
+    public String editBoardSummer(Model model, @PathVariable("uuid") String uuid){
         BoardVo view = boardService.listAllbyNum(uuid);
 
         model.addAttribute("view", view);
 
-        return "edit";
+        return "summerEdit";
     }
 
 
