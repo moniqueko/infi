@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.infinitum.monique.mapper.BoardMapper">
+    <select id="listAll" resultType="com.infinitum.monique.domain.BoardVo">
+        SELECT *
+        FROM board
+        ORDER BY regi_date desc
+    </select>
+
+    <select id="listAllbyNum" resultType="com.infinitum.monique.domain.BoardVo">
+        SELECT *
+        FROM board
+        WHERE uuid=#{uuid}
+    </select>
+
+    <insert id="boardWrite" parameterType="com.infinitum.monique.domain.BoardVo">
+        INSERT INTO board (uuid, name, subject, content, regi_date, edit_date, inuse)
+        VALUES(nextval(uuid_seq), #{name},#{subject},#{content},NOW(),NOW(),1)
+    </insert>
+</mapper>
