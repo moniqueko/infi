@@ -3,6 +3,7 @@
 <%@ taglib prefix="c"      uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form"   uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
@@ -24,16 +25,17 @@
         <table class="table">
             <tr>
                 <td style="width:10%; text-align: center;">번호</td>
-                <td style="width:40%; text-align: center;">제목</td>
-                <td style="width:20%; text-align: center;">작성자</td>
-                <td style="width:30%; text-align: center;">등록일</td>
+                <td style="width:60%; text-align: center;">제목</td>
+                <td style="width:10%; text-align: center;">작성자</td>
+                <td style="width:20%; text-align: center;">등록일</td>
             </tr>
             <c:forEach var="board" items="${board}" varStatus="status">
             <tr>
                 <td style="width:10%; text-align: center;">${board.uuid}</td>
-                <td style="width:40%; text-align: center;"><a href="<c:url value='/view/${board.uuid}'/>">${board.subject}</a></td>
-                <td style="width:20%; text-align: center;">${board.name}</td>
-                <td style="width:30%; text-align: center;">${board.regiDate}</td>
+                <td style="width:60%; text-align: center;"><a href="<c:url value='/view/${board.uuid}'/>">${board.subject}</a></td>
+                <td style="width:10%; text-align: center;">${board.name}</td>
+                <td style="width:20%; text-align: center;">
+                    <fmt:formatDate value="${board.regiDate}" pattern="yyyy-MM-dd HH:mm"/></td>
             </tr>
         </c:forEach>
     </table>

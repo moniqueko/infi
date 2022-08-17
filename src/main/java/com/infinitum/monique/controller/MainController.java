@@ -52,7 +52,6 @@ public class MainController {
     @GetMapping("/view/{uuid}")
     public String selectBoard(Model model, @PathVariable("uuid") String uuid){
         BoardVo view = boardService.listAllbyNum(uuid);
-
         model.addAttribute("view", view);
 
         return "view";

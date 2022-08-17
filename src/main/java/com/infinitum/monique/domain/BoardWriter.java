@@ -9,5 +9,6 @@ public class BoardWriter {
     private String writer;
     private String title;
     private String txtContent;
+    private int uuid;
 
 }

@@ -25,15 +25,22 @@ public class RestController {
 
     @PostMapping("/boardWrite")
     public SingleResult<?> boardWrite(BoardVo boardVo, @RequestBody BoardWriter boardWriter, HttpServletRequest request) throws IOException {
-        System.out.println("<<<<<<<<<<폼에서 받아온 정보");
-        System.out.println(boardWriter);
+
         boardVo.setName(boardWriter.getWriter());
         boardVo.setContent(boardWriter.getTxtContent());
         boardVo.setSubject(boardWriter.getTitle());
 
         boardService.boardWrite(boardVo);
-        System.out.println("<<<<<<<<<<실행완료");
+        return responseService.getSuccessResult();
+    }
 
+    @PostMapping("/boardEdit")
+    public SingleResult<?> boardEdit(BoardVo boardVo, @RequestBody BoardWriter boardWriter, HttpServletRequest request) throws IOException {
+        boardVo.setContent(boardWriter.getTxtContent());
+        boardVo.setSubject(boardWriter.getTitle());
+        boardVo.setUuid(boardWriter.getUuid());
+
+        boardService.boardUpdate(boardVo);
         return responseService.getSuccessResult();
     }
 }

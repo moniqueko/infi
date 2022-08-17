@@ -29,4 +29,9 @@ public class BoardImpl implements BoardService {
         BoardVo board = mapper.listAllbyNum(uuid);
         return board;
     }
+
+    @Override
+    public void boardUpdate(BoardVo boardVo) {
+        mapper.updateBoard(boardVo);
+    }
 }

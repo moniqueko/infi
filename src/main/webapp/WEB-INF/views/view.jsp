@@ -43,7 +43,8 @@
 
     </table>
     </div>
-    <input type="button" onclick="javascript:history.back();" value="뒤로가기">
+    <input type="button" onclick="javascript:history.back();" value="뒤로가기">&nbsp;
+    <button><a href="<c:url value='/edit/${view.uuid}'/>">수정하기</a></button>
 </div>
 </body>
 </html>

@@ -19,4 +19,10 @@
         INSERT INTO board (uuid, name, subject, content, regi_date, edit_date, inuse)
         VALUES(nextval(uuid_seq), #{name},#{subject},#{content},NOW(),NOW(),1)
     </insert>
+
+    <update id="updateBoard" parameterType="com.infinitum.monique.domain.BoardVo">
+        UPDATE board
+        SET subject=#{subject}, content=#{content}, edit_date=NOW()
+        WHERE uuid=#{uuid}
+    </update>
 </mapper>

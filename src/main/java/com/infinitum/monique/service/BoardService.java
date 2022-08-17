@@ -9,4 +9,6 @@ public interface BoardService {
     void boardWrite(BoardVo boardVo);
     List<BoardVo> listAll();
     BoardVo listAllbyNum(String uuid);
+
+    void boardUpdate(BoardVo boardVo);
 }

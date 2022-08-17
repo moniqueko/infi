@@ -19,10 +19,10 @@
     <script>
         function save(){
             oEditors.getById["txtContent"].exec("UPDATE_CONTENTS_FIELD", []);
-            //스마트 에디터 값을 텍스트컨텐츠로 전달
-            //var content = document.getElementById("smartEditor").value;
+
             var writer = document.getElementById("writer").value;
             var title = document.getElementById("title").value;
+            var uuid = document.getElementById("uuid").value;
             var contents = document.getElementById("txtContent").value;
 
                 //var form = $('#editorForm')[0];
@@ -31,19 +31,21 @@
                 var data = {
                     'writer' : writer,
                     'title': title,
-                    'txtContent': contents
+                    'txtContent': contents,
+                    'uuid' : uuid
                 };
 
                 $.ajax({
                     type: "POST",
-                    url: "/boardWrite",
+                    url: "/boardEdit",
                     data: JSON.stringify(data),
                     dataType: "JSON",
                     contentType: "application/json",
                     accept: "application/json",
                     success: function(data) {
                         console.log(data.message);
-                        console.log('통신 성공');
+                        alert("수정이 완료되었습니다.");
+                        location.href="/list";
 
                     },
                     error: function(request, status, error) {
@@ -60,28 +62,36 @@
     </script>
 </head>
 <body>
-<form id="editorForm" name="editorForm">
-    <table class="table">
-        <tr>
-            <td>작성자 </td>
-            <td>
-                <input type="text" name="writer" id="writer" style="width:1000px;" value="${board.name}" readonly><br>
-            </td>
-         </tr>
-        <tr>
-            <td>글제목 </td>
-            <td>
-                <input type="text" name="title" id="title" style="width:1000px;" value="${board.subject}"><br>
-            </td>
-        </tr>
-        <tr>
-            <td>내용 </td>
-            <td>
-                <textarea id="txtContent" rows="10" cols="100" style="width:1000px;">${board.content}</textarea>
-            </td>
-        </tr>
-    </table>
-</form>
+
+<div class="container">
+    <div class="row justify-content-md-center">
+        <form id="editorForm" name="editorForm">
+            <table class="table">
+                <tr>
+                    <td>작성자 </td>
+                    <td>
+                        <input type="text" name="writer" id="writer" style="width:400px;" value="${view.name}" readonly><br>
+                        <input type="hidden" name="uuid" id="uuid" value="${view.uuid}">
+                    </td>
+                 </tr>
+                <tr>
+                    <td>글제목 </td>
+                    <td>
+                        <input type="text" name="title" id="title" style="width:1000px;" value="${view.subject}"><br>
+                    </td>
+                </tr>
+                <tr>
+                    <td>내용 </td>
+                    <td>
+                        <textarea id="txtContent" rows="10" cols="100" style="width:990px;">${view.content}</textarea>
+                    </td>
+                </tr>
+            </table>
+        </form>
+        <input type="button" onclick="save();" value="글 수정">
+    </div>
+</div>
+
 <!-- textarea 밑에 script 작성하기 -->
 <script id="smartEditor" type="text/javascript">
     var oEditors = [];
@@ -98,8 +108,5 @@
     });
 </script>
 
-<div>
-    <input type="button" onclick="save();" value="글 작성">
-</div>
 </body>
 </html>
