@@ -21,7 +21,7 @@
 
 <div class="container">
     <div class="row justify-content-md-center">
-        <h2>Naver Editor Board</h2>
+        <h2>Summer Editor Board</h2>
         <table class="table">
             <tr>
                 <td style="width:10%; text-align: center;">번호</td>
