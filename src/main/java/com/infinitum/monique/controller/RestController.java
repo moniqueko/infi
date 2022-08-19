@@ -1,32 +1,22 @@
 package com.infinitum.monique.controller;
 
-import com.amazonaws.services.s3.model.CannedAccessControlList;
-import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.amazonaws.services.s3.model.PutObjectRequest;
+
 import com.infinitum.monique.domain.BoardVo;
 import com.infinitum.monique.domain.BoardWriter;
 import com.infinitum.monique.domain.SingleResult;
 import com.infinitum.monique.service.AwsS3Service;
 import com.infinitum.monique.service.BoardService;
 import com.infinitum.monique.service.ResponseService;
-
-import org.apache.commons.io.FileUtils;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.server.ResponseStatusException;
 
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @org.springframework.web.bind.annotation.RestController
@@ -34,7 +24,6 @@ import java.util.Map;
 public class RestController {
     private final ResponseService responseService;
     private final BoardService boardService;
-
     private final AwsS3Service awsS3Service;
 
     public RestController(ResponseService responseService, BoardService boardService, AwsS3Service awsS3Service) {
@@ -64,6 +53,8 @@ public class RestController {
         return responseService.getSuccessResult();
     }
 
+
+//일반 로컬에 업로드
 //    @PostMapping(value="/uploadSummernoteImageFile", produces = "application/json")
 //    @ResponseBody
 //    public Object uploadSummernoteImageFile(@RequestParam("file") MultipartFile multipartFile) throws IOException {
@@ -93,13 +84,13 @@ public class RestController {
 //        return object;
 //    }
 
-    @PostMapping(value="/uploadSummernoteImageFile", produces = "application/json")
+    //바로 S3업로드
+    @PostMapping(value="/uploadSummernoteImageFileS3", produces = "application/json") //amazon s3
     @ResponseBody
-    public SingleResult<?> uploadSummernoteImageFile(@RequestParam("file") MultipartFile multipartFile) throws IOException {
+    public Map<String, Object> uploadSummernoteImageFileS3(@RequestParam("file") MultipartFile multipartFile) throws IOException {
+        Map<String, Object> object = new HashMap<String, Object>();
+        object = awsS3Service.uploadImage(multipartFile);
 
-        awsS3Service.uploadImage(multipartFile);
-
-        System.out.println("실행 테스트3");
-        return  responseService.getSuccessResult();
+        return object;
     }
 }
