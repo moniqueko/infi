@@ -40,7 +40,7 @@ public class AwsS3Service {
     public Map<String, Object> uploadImage(MultipartFile file) {
         Map<String, Object> object = new HashMap<String, Object>();
 
-//        AmazonS3 s3Client = new AmazonS3Client(credentials);
+//      AmazonS3 s3Client = new AmazonS3Client(credentials);
 
         AmazonS3 s3Client = amazonS3Client;
 

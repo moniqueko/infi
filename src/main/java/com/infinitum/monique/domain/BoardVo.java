@@ -15,5 +15,6 @@ public class BoardVo {
     private Date editDate;
     private Date regiDate;
     private int inuse;
+    private String thumbnail;
 
 }

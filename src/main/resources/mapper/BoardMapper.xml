@@ -16,8 +16,8 @@
     </select>
 
     <insert id="boardWrite" parameterType="com.infinitum.monique.domain.BoardVo">
-        INSERT INTO board (uuid, name, subject, content, regi_date, edit_date, inuse)
-        VALUES(nextval(uuid_seq), #{name},#{subject},#{content},NOW(),NOW(),1)
+        INSERT INTO board (uuid, name, subject, content, regi_date, edit_date, inuse, thumbnail)
+        VALUES(nextval(uuid_seq), #{name},#{subject},#{content},NOW(),NOW(),1, #{thumbnail})
     </insert>
 
     <update id="updateBoard" parameterType="com.infinitum.monique.domain.BoardVo">

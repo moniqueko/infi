@@ -52,8 +52,6 @@
                     }
                 });
 
-                $("#editorForm").submit();
-
         }
 
     </script>
@@ -99,10 +97,10 @@
             lang: "ko-KR",
             placeholder: '최대 2048자까지 쓸 수 있습니다',
             callbacks: {
-                  onImageUpload : function(files) {
-                     uploadSummernoteImageFileS3(files[0],this);
-                  }
-             }
+                onImageUpload: function (files) {
+                    uploadSummernoteImageFileS3(files[0], this);
+                }
+            }
 
         });
 

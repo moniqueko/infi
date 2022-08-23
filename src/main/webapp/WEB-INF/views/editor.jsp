@@ -25,9 +25,6 @@
             var title = document.getElementById("title").value;
             var contents = document.getElementById("txtContent").value;
 
-                //var form = $('#editorForm')[0];
-                //var data = new FormData(form);
-
                 var data = {
                     'writer' : writer,
                     'title': title,
@@ -42,18 +39,15 @@
                     contentType: "application/json",
                     accept: "application/json",
                     success: function(data) {
-                        console.log(data.message);
-                        console.log('통신 성공');
+                        alert("글쓰기 성공");
+                        location.href="/list";
 
                     },
                     error: function(request, status, error) {
                         console.log("ERROR : "+request.status+"\n"+"message"+request.responseText+"\n"+"error:"+error);
-
                         alert("fail");
                     }
                 });
-
-                $("#editorForm").submit();
 
         }
 
