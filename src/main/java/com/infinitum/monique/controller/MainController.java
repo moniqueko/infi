@@ -71,7 +71,7 @@ public class MainController {
 //        return "edit";
 //    }
 
-    @GetMapping("/edit/{uuid}")
+    @GetMapping("/edit/{uuid}") //섬머에디터 수정
     public String editBoardSummer(Model model, @PathVariable("uuid") String uuid){
         BoardVo view = boardService.listAllbyNum(uuid);
 

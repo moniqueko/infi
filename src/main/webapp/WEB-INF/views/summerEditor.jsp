@@ -23,10 +23,13 @@
 
     <script>
         function save(){
+            var file = document.getElementById("file").value;
             var writer = document.getElementById("writer").value;
             var title = document.getElementById("title").value;
             var contents = document.getElementById("summernote").value; //모든 태그. 이미 이미지 주소 로컬에 생성됨.
 
+                console.log(file);
+                return;
                 var data = {
                     'writer' : writer,
                     'title': title,
@@ -78,6 +81,18 @@
                     <td>내용 </td>
                     <td>
                         <textarea id="summernote" rows="10" cols="100" style="width:990px;"></textarea>
+                    </td>
+                </tr>
+                <tr>
+                    <td>파일첨부 1</td>
+                    <td>
+                        <input type="file" name="file" id="file"><br>
+                    </td>
+                </tr>
+                <tr>
+                    <td>파일첨부 2</td>
+                    <td>
+                        <input type="file" name="file2" id="file2"><br>
                     </td>
                 </tr>
             </table>
