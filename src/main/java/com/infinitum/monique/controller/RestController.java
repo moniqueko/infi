@@ -39,28 +39,31 @@ public class RestController {
     @PostMapping("/boardWrite")
     public SingleResult<?> boardWrite(BoardVo boardVo, @RequestBody BoardWriter boardWriter, HttpServletRequest request, AttachFile attachFile) throws IOException {
 
+        //Map<String, Object> object = new HashMap<String, Object>();
+        System.out.println("<<<<<<<<<<<<<<<<<<<출력 테스트"+ boardVo);
+        System.out.println("<<<<<<<<<<<<<<<<<<<출력 테스트"+ boardWriter);
+
         //파일이름 생성/////////////
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmssSSS");
         Calendar dateTime = Calendar.getInstance();
         String uniqueId = sdf.format(dateTime.getTime()) + "."
-                + boardWriter.getFile().getOriginalFilename().substring(boardWriter.getFile().getOriginalFilename().lastIndexOf(".") + 1);
+                + boardWriter.getUploadFile().getOriginalFilename().substring(boardWriter.getUploadFile().getOriginalFilename().lastIndexOf(".") + 1);
         ///////////////////////////
 
         System.out.println("제목"+ boardWriter.getTitle());
         System.out.println("파일이름"+ uniqueId);
-        System.out.println("첨부파일 본이름"+ boardWriter.getFile().getOriginalFilename());
-        System.out.println("첨부파일 컨텐트 타입"+ boardWriter.getFile().getContentType());
-        System.out.println("첨부파일 크기"+ boardWriter.getFile().getSize());
-        System.out.println("첨부파일 바이트"+ boardWriter.getFile().getBytes());
-        System.out.println("확장자"+boardWriter.getFile().getOriginalFilename().substring(boardWriter.getFile().getOriginalFilename().lastIndexOf(".") + 1));
+        System.out.println("첨부파일 본이름"+ boardWriter.getUploadFile().getOriginalFilename());
+        System.out.println("첨부파일 컨텐트 타입"+ boardWriter.getUploadFile().getContentType());
+        System.out.println("첨부파일 크기"+ boardWriter.getUploadFile().getSize());
+        System.out.println("첨부파일 바이트"+ boardWriter.getUploadFile().getBytes());
+        System.out.println("확장자"+boardWriter.getUploadFile().getOriginalFilename().substring(boardWriter.getUploadFile().getOriginalFilename().lastIndexOf(".") + 1));
 
-        String realName = boardWriter.getFile().getOriginalFilename();
-        String contentType = boardWriter.getFile().getContentType();
-        String extension = boardWriter.getFile().getOriginalFilename().substring(boardWriter.getFile().getOriginalFilename().lastIndexOf(".") + 1);
-        long size = boardWriter.getFile().getSize();
+        String realName = boardWriter.getUploadFile().getOriginalFilename();
+        String contentType = boardWriter.getUploadFile().getContentType();
+        String extension = boardWriter.getUploadFile().getOriginalFilename().substring(boardWriter.getUploadFile().getOriginalFilename().lastIndexOf(".") + 1);
+        long size = boardWriter.getUploadFile().getSize();
 
         attachFile.setFileContentType(contentType);
-        //attachFile.setFilePath(uploadDir+uniqueId);//아마존 주소?
         attachFile.setFileName(uniqueId);
         attachFile.setFileRealName(realName);
         attachFile.setFileSize(size);
@@ -69,10 +72,16 @@ public class RestController {
         boardVo.setName(boardWriter.getWriter());
         boardVo.setContent(boardWriter.getTxtContent());
         boardVo.setSubject(boardWriter.getTitle());
-        boardVo.setFile(boardWriter.getFile());
+        boardVo.setFile(boardWriter.getUploadFile());
 
         boardService.boardWrite(boardVo);
-        //awsS3Service.uploadFile(attachFile);
+
+
+        String path = awsS3Service.uploadFile(boardWriter.getUploadFile());
+        System.out.println(">>>>>>>>>>>>>>>>>>>>>>실행 테스트");
+
+        attachFile.setFilePath(path);//아마존 주소?
+        boardService.attachFile(attachFile);
 
         return responseService.getSuccessResult();
 
