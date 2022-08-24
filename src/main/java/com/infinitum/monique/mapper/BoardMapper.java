@@ -1,6 +1,5 @@
 package com.infinitum.monique.mapper;
 
-import com.infinitum.monique.domain.AttachFile;
 import com.infinitum.monique.domain.BoardVo;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -12,7 +11,4 @@ public interface BoardMapper {
     List<BoardVo> listAll();
     BoardVo listAllbyNum(String uuid);
     void updateBoard(BoardVo boardVo);
-
-    void insertAttachFile(AttachFile attachFile);
-
 }

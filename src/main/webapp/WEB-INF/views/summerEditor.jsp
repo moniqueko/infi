@@ -9,7 +9,6 @@
     <title>Summer Editor</title>
     <script type="text/javascript" src="/libs/smarteditor/js/service/HuskyEZCreator.js" charset="utf-8"></script>
     <script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
 
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -24,35 +23,26 @@
 
     <script>
         function save(){
-            var uploadFile = document.getElementById("uploadFile").value;
+            var file = document.getElementById("file").value;
             var writer = document.getElementById("writer").value;
             var title = document.getElementById("title").value;
             var contents = document.getElementById("summernote").value; //모든 태그. 이미 이미지 주소 로컬에 생성됨.
 
-            // Get form
-            var form = $('#editorForm')[0];
-            // Create an FormData object
-            var formdata = new FormData(form);
-
-            // disabled the submit button
+                console.log(file);
+                return;
                 var data = {
                     'writer' : writer,
                     'title': title,
-                    'txtContent': contents,
-                    'uploadFile': uploadFile
+                    'txtContent': contents
                 };
-                console.log(data+"data 출력");
 
                 $.ajax({
                     type: "POST",
                     url: "/boardWrite",
-                    //data: JSON.stringify(data),
-                    data: data,
+                    data: JSON.stringify(data),
                     dataType: "JSON",
                     contentType: "application/json",
-                    //contentType: false,
-                    processData : false,
-                    //accept: "application/json",
+                    accept: "application/json",
                     success: function(data) {
                         alert("글쓰기 성공");
                         location.href="/list";
@@ -96,7 +86,7 @@
                 <tr>
                     <td>파일첨부 1</td>
                     <td>
-                        <input type="file" name="uploadFile" id="uploadFile"><br>
+                        <input type="file" name="file" id="file"><br>
                     </td>
                 </tr>
                 <tr>

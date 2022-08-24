@@ -65,31 +65,31 @@ public class AwsS3Service {
         return object;
     }
 
-    public String uploadFile(MultipartFile file) {
-        //Map<String, Object> object = new HashMap<String, Object>();
-
-//      AmazonS3 s3Client = new AmazonS3Client(credentials);
-
-        AmazonS3 s3Client = amazonS3Client;
-
-        String fileName = createFileName(file.getOriginalFilename());
-        ObjectMetadata objectMetadata = new ObjectMetadata();
-        objectMetadata.setContentLength(file.getSize());
-        objectMetadata.setContentType(file.getContentType());
-
-        String path = "https://moniquebucket.s3.ap-northeast-2.amazonaws.com/folder/"+fileName;
-
-        try(InputStream inputStream = file.getInputStream()) {
-            s3Client.putObject(new PutObjectRequest(bucket, fileName, inputStream, objectMetadata)
-                    .withCannedAcl(CannedAccessControlList.PublicRead));
-
-        } catch(IOException e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "이미지 업로드에 실패했습니다.");
-        }
-
-
-        return path;
-    }
+//    public Map<String, Object> uploadFile(AttachFile file, File file) { //작업 중.......
+//        Map<String, Object> object = new HashMap<String, Object>();
+//
+////      AmazonS3 s3Client = new AmazonS3Client(credentials);
+//
+//        AmazonS3 s3Client = amazonS3Client;
+//
+//        String fileName = createFileName(file.getFileRealName());
+//        ObjectMetadata objectMetadata = new ObjectMetadata();
+//        objectMetadata.setContentLength(file.getFileSize());
+//        objectMetadata.setContentType(file.getFileContentType());
+//
+//        String path = "https://moniquebucket.s3.ap-northeast-2.amazonaws.com/folder/"+fileName;
+//
+//        try(InputStream inputStream = file.getInputStream()) {
+//            s3Client.putObject(new PutObjectRequest(bucket, fileName, inputStream, objectMetadata)
+//                    .withCannedAcl(CannedAccessControlList.PublicRead));
+//
+//        } catch(IOException e) {
+//            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "이미지 업로드에 실패했습니다.");
+//        }
+//        object.put("path",path);
+//
+//        return object;
+//    }
 
 //    public void deleteImage(String fileName) {
 //        amazonS3.deleteObject(new DeleteObjectRequest(bucket, fileName));
