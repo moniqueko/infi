@@ -93,4 +93,22 @@ public class RestController {
 
         return object;
     }
+
+    @PostMapping(value="/deleteFileFromS3", produces = "application/json") //amazon s3
+    @ResponseBody
+    public Map<String, Object> deleteFileFromS3(@RequestParam("src") String src) throws IOException {
+        Map<String, Object> object = new HashMap<String, Object>();
+        String fileName = getFileNameFromURL(src);
+        System.out.println(fileName+"파일이름 출력<<<<<<<<<<<<<<<<<");
+
+        awsS3Service.deleteImage(fileName);
+
+        return object;
+    }
+
+    public static String getFileNameFromURL(String url) {
+        return url.substring(url.lastIndexOf('/') + 1, url.length());
+
+    }
+
 }

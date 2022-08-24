@@ -63,9 +63,10 @@ public class AwsS3Service {
         return object;
     }
 
-//    public void deleteImage(String fileName) {
-//        amazonS3.deleteObject(new DeleteObjectRequest(bucket, fileName));
-//    }
+    public void deleteImage(String fileName) {
+        AmazonS3 s3Client = amazonS3Client;
+        s3Client.deleteObject(new DeleteObjectRequest(bucket, fileName));
+    }
 
     private String createFileName(String fileName) {
         return UUID.randomUUID().toString().concat(getFileExtension(fileName));

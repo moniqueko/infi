@@ -99,7 +99,12 @@
             callbacks: {
                 onImageUpload: function (files) {
                     uploadSummernoteImageFileS3(files[0], this);
+                },
+                onMediaDelete : function(target) {
+                    //alert(target[0].src);
+                    deleteFileFromS3(target[0].src);
                 }
+
             }
 
         });
@@ -155,6 +160,22 @@
                 ,error:function(request,status,error, data){
                     alert("Error");
                 }
+            });
+        }
+
+        function deleteFileFromS3(src) { //AWS S3파일 삭제
+            $.ajax({
+                data: {src: src},
+                type: "POST",
+                url: "/deleteFileFromS3",
+                // cache: false,
+                success: function (msg) {
+                    alert("이미지가 삭제되었습니다");
+                }
+                , error: function (request, status, error, data) {
+                    alert("Error");
+                }
+
             });
         }
 
