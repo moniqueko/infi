@@ -39,7 +39,7 @@
             </tr>
         </c:forEach>
     </table>
-        <button><a href="<c:url value='/summerEditor'/>">글쓰기</a></button>
+        <button><a href="<c:url value='/editor'/>">글쓰기</a></button>
     </div>
 </div>
 </body>

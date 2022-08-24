@@ -77,7 +77,7 @@ public class MainController {
 
         model.addAttribute("view", view);
 
-        return "summerEdit";
+        return "edit";
     }
 
 

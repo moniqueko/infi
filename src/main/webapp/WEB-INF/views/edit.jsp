@@ -55,8 +55,6 @@
                     }
                 });
 
-                $("#editorForm").submit();
-
         }
 
     </script>
