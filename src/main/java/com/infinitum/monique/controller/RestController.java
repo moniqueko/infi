@@ -1,8 +1,6 @@
 package com.infinitum.monique.controller;
 
 
-import com.amazonaws.services.s3.model.PutObjectRequest;
-import com.infinitum.monique.domain.AttachFile;
 import com.infinitum.monique.domain.BoardVo;
 import com.infinitum.monique.domain.BoardWriter;
 import com.infinitum.monique.domain.SingleResult;
@@ -18,8 +16,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -37,47 +33,15 @@ public class RestController {
     }
 
     @PostMapping("/boardWrite")
-    public SingleResult<?> boardWrite(BoardVo boardVo, @RequestBody BoardWriter boardWriter, HttpServletRequest request, AttachFile attachFile) throws IOException {
-
-        //파일이름 생성/////////////
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmssSSS");
-        Calendar dateTime = Calendar.getInstance();
-        String uniqueId = sdf.format(dateTime.getTime()) + "."
-                + boardWriter.getFile().getOriginalFilename().substring(boardWriter.getFile().getOriginalFilename().lastIndexOf(".") + 1);
-        ///////////////////////////
-
-        System.out.println("제목"+ boardWriter.getTitle());
-        System.out.println("파일이름"+ uniqueId);
-        System.out.println("첨부파일 본이름"+ boardWriter.getFile().getOriginalFilename());
-        System.out.println("첨부파일 컨텐트 타입"+ boardWriter.getFile().getContentType());
-        System.out.println("첨부파일 크기"+ boardWriter.getFile().getSize());
-        System.out.println("첨부파일 바이트"+ boardWriter.getFile().getBytes());
-        System.out.println("확장자"+boardWriter.getFile().getOriginalFilename().substring(boardWriter.getFile().getOriginalFilename().lastIndexOf(".") + 1));
-
-        String realName = boardWriter.getFile().getOriginalFilename();
-        String contentType = boardWriter.getFile().getContentType();
-        String extension = boardWriter.getFile().getOriginalFilename().substring(boardWriter.getFile().getOriginalFilename().lastIndexOf(".") + 1);
-        long size = boardWriter.getFile().getSize();
-
-        attachFile.setFileContentType(contentType);
-        //attachFile.setFilePath(uploadDir+uniqueId);//아마존 주소?
-        attachFile.setFileName(uniqueId);
-        attachFile.setFileRealName(realName);
-        attachFile.setFileSize(size);
-        attachFile.setFileExtension(extension);
+    public SingleResult<?> boardWrite(BoardVo boardVo, @RequestBody BoardWriter boardWriter, HttpServletRequest request) throws IOException {
 
         boardVo.setName(boardWriter.getWriter());
         boardVo.setContent(boardWriter.getTxtContent());
         boardVo.setSubject(boardWriter.getTitle());
-        boardVo.setFile(boardWriter.getFile());
 
         boardService.boardWrite(boardVo);
-        //awsS3Service.uploadFile(attachFile);
-
         return responseService.getSuccessResult();
-
     }
-
 
     @PostMapping("/boardEdit")
     public SingleResult<?> boardEdit(BoardVo boardVo, @RequestBody BoardWriter boardWriter, HttpServletRequest request) throws IOException {

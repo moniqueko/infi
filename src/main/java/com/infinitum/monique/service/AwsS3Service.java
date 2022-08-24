@@ -3,14 +3,12 @@ package com.infinitum.monique.service;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.*;
-import com.infinitum.monique.domain.AttachFile;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
@@ -64,32 +62,6 @@ public class AwsS3Service {
 
         return object;
     }
-
-//    public Map<String, Object> uploadFile(AttachFile file, File file) { //작업 중.......
-//        Map<String, Object> object = new HashMap<String, Object>();
-//
-////      AmazonS3 s3Client = new AmazonS3Client(credentials);
-//
-//        AmazonS3 s3Client = amazonS3Client;
-//
-//        String fileName = createFileName(file.getFileRealName());
-//        ObjectMetadata objectMetadata = new ObjectMetadata();
-//        objectMetadata.setContentLength(file.getFileSize());
-//        objectMetadata.setContentType(file.getFileContentType());
-//
-//        String path = "https://moniquebucket.s3.ap-northeast-2.amazonaws.com/folder/"+fileName;
-//
-//        try(InputStream inputStream = file.getInputStream()) {
-//            s3Client.putObject(new PutObjectRequest(bucket, fileName, inputStream, objectMetadata)
-//                    .withCannedAcl(CannedAccessControlList.PublicRead));
-//
-//        } catch(IOException e) {
-//            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "이미지 업로드에 실패했습니다.");
-//        }
-//        object.put("path",path);
-//
-//        return object;
-//    }
 
 //    public void deleteImage(String fileName) {
 //        amazonS3.deleteObject(new DeleteObjectRequest(bucket, fileName));

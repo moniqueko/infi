@@ -12,7 +12,6 @@ public class BoardVo {
     private String subject;
     private String content;
     private MultipartFile file;
-    private MultipartFile file2;
     private Date editDate;
     private Date regiDate;
     private int inuse;

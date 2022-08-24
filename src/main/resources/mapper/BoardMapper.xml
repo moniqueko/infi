@@ -16,8 +16,8 @@
     </select>
 
     <insert id="boardWrite" parameterType="com.infinitum.monique.domain.BoardVo">
-        INSERT INTO board (uuid, name, subject, content, regi_date, edit_date, inuse, thumbnail, file)
-        VALUES(nextval(uuid_seq), #{name},#{subject},#{content},NOW(),NOW(),1, #{thumbnail}, {file})
+        INSERT INTO board (uuid, name, subject, content, regi_date, edit_date, inuse, thumbnail)
+        VALUES(nextval(uuid_seq), #{name},#{subject},#{content},NOW(),NOW(),1, #{thumbnail})
     </insert>
 
     <update id="updateBoard" parameterType="com.infinitum.monique.domain.BoardVo">
@@ -25,10 +25,4 @@
         SET subject=#{subject}, content=#{content}, edit_date=NOW()
         WHERE uuid=#{uuid}
     </update>
-
-    <!-- 첨부파일 테이블 추가-->
-    <insert id="insertAttachFile" parameterType="com.infinitum.monique.domain.AttachFile">
-        INSERT INTO attach_file (uuid,file_name,file_real_name,file_size,file_path,file_extension,file_content_type,file_regi_date,file_edit_date)
-        VALUES(#{uuid},#{fileName},#{fileRealName},#{fileSize},#{filePath},#{fileExtension},#{fileContentType},NOW(),NOW())
-    </insert>
 </mapper>
