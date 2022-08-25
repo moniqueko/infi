@@ -1,21 +1,22 @@
 package com.infinitum.monique.controller;
 
 
+import com.infinitum.monique.domain.AttachFile;
 import com.infinitum.monique.domain.BoardVo;
 import com.infinitum.monique.domain.BoardWriter;
 import com.infinitum.monique.domain.SingleResult;
 import com.infinitum.monique.service.AwsS3Service;
 import com.infinitum.monique.service.BoardService;
 import com.infinitum.monique.service.ResponseService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,6 +34,53 @@ public class RestController {
     }
 
     @PostMapping("/boardWrite")
+    public Map<String, Object> boardWrite(Model model, BoardVo boardVo, @ModelAttribute BoardWriter boardWriter, AttachFile attachFile) throws IOException {
+        Map<String, Object> object = new HashMap<String, Object>();
+
+            if(!boardWriter.getUploadFile().isEmpty()) {
+                //파일이름 생성/////////////
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+                Calendar dateTime = Calendar.getInstance();
+                String uniqueId = sdf.format(dateTime.getTime()) + "."
+                        + boardWriter.getUploadFile().getOriginalFilename().substring(boardWriter.getUploadFile().getOriginalFilename().lastIndexOf(".") + 1);
+                ///////////////////////////
+
+                String realName = boardWriter.getUploadFile().getOriginalFilename();
+                String contentType = boardWriter.getUploadFile().getContentType();
+                String extension = boardWriter.getUploadFile().getOriginalFilename().substring(boardWriter.getUploadFile().getOriginalFilename().lastIndexOf(".") + 1);
+                long size = boardWriter.getUploadFile().getSize();
+
+                attachFile.setFileContentType(contentType);
+                attachFile.setFileName(uniqueId);
+                attachFile.setFileRealName(realName);
+                attachFile.setFileSize(size);
+                attachFile.setFileExtension(extension);
+
+                object = awsS3Service.uploadFile(boardWriter.getUploadFile());
+
+                String path = "https://moniquebucket.s3.ap-northeast-2.amazonaws.com/"+object.get("fileName").toString();
+
+                attachFile.setFilePath(path);
+
+                boardVo.setFile(object.get("fileName").toString());
+                boardService.insertAttachFile(attachFile); //셀렉트키는 자동으로 attacFhile에 반환된다. (xml에 파라미터 설정을 했으므로)
+                boardVo.setAttachUid(attachFile.getAttachUid());
+
+                object.put("path", path);
+            }
+
+            boardVo.setName(boardWriter.getWriter());
+            boardVo.setContent(boardWriter.getTxtContent());
+            boardVo.setSubject(boardWriter.getTitle());
+
+            boardService.boardWrite(boardVo);
+
+            object.put("path", null);
+
+            return object;
+    }
+
+    @PostMapping("/boardWriteSummer")
     public SingleResult<?> boardWrite(BoardVo boardVo, @RequestBody BoardWriter boardWriter, HttpServletRequest request) throws IOException {
 
         boardVo.setName(boardWriter.getWriter());

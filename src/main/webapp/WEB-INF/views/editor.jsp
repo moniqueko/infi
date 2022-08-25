@@ -7,6 +7,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Naver Editor</title>
+
     <script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>
     <script type="text/javascript" src="/libs/smarteditor/js/service/HuskyEZCreator.js" charset="utf-8"></script>
 
@@ -17,47 +18,54 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 
     <script>
-        function save(){
+       function save(){
+
             oEditors.getById["txtContent"].exec("UPDATE_CONTENTS_FIELD", []);
-            //스마트 에디터 값을 텍스트컨텐츠로 전달
-            //var content = document.getElementById("smartEditor").value;
+
             var writer = document.getElementById("writer").value;
             var title = document.getElementById("title").value;
-            var contents = document.getElementById("txtContent").value;
+            var txtContent = document.getElementById("txtContent").value;
+            var uploadFile = document.getElementById("uploadFile");
 
-                var data = {
-                    'writer' : writer,
-                    'title': title,
-                    'txtContent': contents
-                };
+             // var data = {
+             //     'writer' : writer,
+             //     'title': title,
+             //     'txtContent': txtContent
+             // };
 
-                $.ajax({
-                    type: "POST",
-                    url: "/boardWrite",
-                    data: JSON.stringify(data),
-                    dataType: "JSON",
-                    contentType: "application/json",
-                    accept: "application/json",
-                    success: function(data) {
-                        alert("글쓰기 성공");
-                        location.href="/list";
+            var form = $('#editorForm')[0];
+            var dataForm = new FormData(form);
+            dataForm.append('txtContent',txtContent); //데이터 폼에다 txtContent내용 추가해서 보내기
 
-                    },
-                    error: function(request, status, error) {
-                        console.log("ERROR : "+request.status+"\n"+"message"+request.responseText+"\n"+"error:"+error);
-                        alert("fail");
-                    }
-                });
+           $.ajax({
+               type: "POST",
+               url: "/boardWrite",
+               data: dataForm,
+               dataType: "text",
+               //contentType: "application/json",
+               contentType: false,
+               processData: false,
+               success: function(data) {
+                   alert("글쓰기 성공");
+                   location.href="/boardList";
+
+               },
+               error: function(request, status, error) {
+                   console.log("ERROR : "+request.status+"\n"+"message"+request.responseText+"\n"+"error:"+error);
+                   alert("fail");
+               }
+           });
+
+
 
         }
-
     </script>
 </head>
 <body>
 
 <div class="container">
     <div class="row justify-content-md-center">
-        <form id="editorForm" name="editorForm">
+        <form enctype="multipart/form-data" id="editorForm" name="editorForm">
             <table class="table">
                 <tr>
                     <td>작성자 </td>
@@ -75,6 +83,12 @@
                     <td>내용 </td>
                     <td>
                         <textarea id="txtContent" rows="10" cols="100" style="width:990px;"></textarea>
+                    </td>
+                </tr>
+                <tr>
+                    <td>파일첨부1 </td>
+                    <td>
+                        <input type="file" name="uploadFile" id="uploadFile" style="width:1000px;"><br>
                     </td>
                 </tr>
             </table>

@@ -63,6 +63,31 @@ public class AwsS3Service {
         return object;
     }
 
+    public Map<String, Object> uploadFile(MultipartFile file) {
+        Map<String, Object> object = new HashMap<String, Object>();
+
+//      AmazonS3 s3Client = new AmazonS3Client(credentials);
+        AmazonS3 s3Client = amazonS3Client;
+
+        String fileName = createFileName(file.getOriginalFilename());
+        ObjectMetadata objectMetadata = new ObjectMetadata();
+        objectMetadata.setContentLength(file.getSize());
+        objectMetadata.setContentType(file.getContentType());
+
+        try(InputStream inputStream = file.getInputStream()) {
+            s3Client.putObject(new PutObjectRequest(bucket, fileName, inputStream, objectMetadata)
+                    .withCannedAcl(CannedAccessControlList.PublicRead));
+            System.out.println("아마존 업로드 완료");
+
+            object.put("fileName",fileName);
+
+        } catch(IOException e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "파일 업로드에 실패했습니다.");
+        }
+        
+        return object; //파일이름 반환
+    }
+
     public void deleteImage(String fileName) {
         AmazonS3 s3Client = amazonS3Client;
         s3Client.deleteObject(new DeleteObjectRequest(bucket, fileName));

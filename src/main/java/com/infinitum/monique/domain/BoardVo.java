@@ -11,10 +11,12 @@ public class BoardVo {
     private String name;
     private String subject;
     private String content;
-    private MultipartFile file;
+    private String file;
     private Date editDate;
     private Date regiDate;
     private int inuse;
-    private String thumbnail;
+    private String fileRealName;
+    private String filePath;
+    private int attachUid;
 
 }

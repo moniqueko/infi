@@ -15,9 +15,15 @@
         WHERE uuid=#{uuid}
     </select>
 
+    <select id="view" resultType="com.infinitum.monique.domain.BoardVo">
+        SELECT *
+        FROM board b left join attach_file af on b.attach_uid=af.attach_uid
+        WHERE b.uuid=#{uuid}
+    </select>
+
     <insert id="boardWrite" parameterType="com.infinitum.monique.domain.BoardVo">
-        INSERT INTO board (uuid, name, subject, content, regi_date, edit_date, inuse, thumbnail)
-        VALUES(nextval(uuid_seq), #{name},#{subject},#{content},NOW(),NOW(),1, #{thumbnail})
+        INSERT INTO board (uuid, name, subject, content, regi_date, edit_date, inuse, attach_uid, file)
+        VALUES(nextval(uuid_seq), #{name},#{subject},#{content},NOW(),NOW(),1, #{attachUid}, #{file})
     </insert>
 
     <update id="updateBoard" parameterType="com.infinitum.monique.domain.BoardVo">
@@ -25,4 +31,14 @@
         SET subject=#{subject}, content=#{content}, edit_date=NOW()
         WHERE uuid=#{uuid}
     </update>
+
+    <!-- 첨부파일 테이블 추가-->
+    <insert id="insertAttachFile" parameterType="com.infinitum.monique.domain.AttachFile">
+        INSERT INTO attach_file (file_name,file_real_name,file_size,file_path,file_extension,file_content_type,file_regi_date,file_edit_date)
+        VALUES(#{fileName},#{fileRealName},#{fileSize},#{filePath},#{fileExtension},#{fileContentType},NOW(),NOW())
+
+        <selectKey resultType="int" keyProperty="attachUid" order="AFTER"><!--auto increment 사용해 생성된 uid 가져올때-->
+            select LAST_INSERT_ID()
+        </selectKey>
+    </insert>
 </mapper>

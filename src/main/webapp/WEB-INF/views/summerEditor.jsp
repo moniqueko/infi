@@ -35,7 +35,7 @@
 
                 $.ajax({
                     type: "POST",
-                    url: "/boardWrite",
+                    url: "/boardWriteSummer",
                     data: JSON.stringify(data),
                     dataType: "JSON",
                     contentType: "application/json",
@@ -97,17 +97,35 @@
             lang: "ko-KR",
             placeholder: '최대 2048자까지 쓸 수 있습니다',
             callbacks: {
-                onImageUpload: function (files) {
+
+                onImageUpload: function (files) { //url이동 아닌 업로드시 동작
                     uploadSummernoteImageFileS3(files[0], this);
+
                 },
                 onMediaDelete : function(target) {
                     //alert(target[0].src);
                     deleteFileFromS3(target[0].src);
                 }
+                // },
+                // onKeydown: function(e) {
+                //     if(e.keyCode === 8){
+                //
+                //     }
+                // }
+
 
             }
 
         });
+
+        // $('#summernote').on('summernote.image.upload', function(we, files) {
+        //     if(files[0].onKeydown().keyCode===8){
+        //             alert("삭제실행");
+        //         }
+        //         //deleteFileFromS3(files[0].src);
+        //
+        //
+        // });
 
         // $('#summernote').summernote({
         //     height: 350,

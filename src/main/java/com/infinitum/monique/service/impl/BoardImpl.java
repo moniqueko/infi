@@ -1,5 +1,6 @@
 package com.infinitum.monique.service.impl;
 
+import com.infinitum.monique.domain.AttachFile;
 import com.infinitum.monique.domain.BoardVo;
 import com.infinitum.monique.mapper.BoardMapper;
 import com.infinitum.monique.service.BoardService;
@@ -10,6 +11,8 @@ import java.util.List;
 
 @Service
 public class BoardImpl implements BoardService {
+
+    private String num;
     @Autowired
     BoardMapper mapper;
 
@@ -31,7 +34,18 @@ public class BoardImpl implements BoardService {
     }
 
     @Override
+    public BoardVo view(String uuid) {
+        BoardVo board = mapper.view(uuid);
+        return board;
+    }
+
+    @Override
     public void boardUpdate(BoardVo boardVo) {
         mapper.updateBoard(boardVo);
+    }
+
+    @Override
+    public void insertAttachFile(AttachFile attachFile) {
+        mapper.insertAttachFile(attachFile);
     }
 }

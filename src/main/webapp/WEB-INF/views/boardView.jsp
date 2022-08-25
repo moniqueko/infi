@@ -21,7 +21,7 @@
 <div class="container">
     <div class="row justify-content-md-center">
         <br>
-        <h2>Summer Editor Board</h2>
+        <h2>Naver Editor Board</h2>
         <br>
         <table class="table">
             <tr>
@@ -40,19 +40,19 @@
             <td>내용</td>
             <td>${view.content}</td>
         </tr>
-            <c:if test="${view.filePath!=null || view.attachUid!=0}">
-                <tr>
-                    <td>첨부파일</td>
-                    <td>${view.fileRealName}<br>
-                        <a href="${view.filePath}">파일열기</a></td>
-                </tr>
-            </c:if>
 
+        <c:if test="${view.filePath!=null || view.attachUid!=0}">
+            <tr>
+            <td>첨부파일</td>
+            <td>${view.fileRealName}<br>
+                <a href="${view.filePath}">파일열기</a></td>
+            </tr>
+        </c:if>
 
-        </table>
+    </table>
     </div>
     <input type="button" onclick="javascript:history.back();" value="뒤로가기">&nbsp;
-    <button><a href="<c:url value='/editSummer/${view.uuid}'/>">수정하기</a></button>
+    <button><a href="<c:url value='/edit/${view.uuid}'/>">수정하기</a></button>
 </div>
 </body>
 </html>

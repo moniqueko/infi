@@ -54,12 +54,29 @@ public class MainController {
 
         return "list";
     }
+    @GetMapping("/boardList")
+    public String boardListNaver(Model model){
+        List<BoardVo> board = boardService.listAll();
+        model.addAttribute("board", board);
+
+        return "boardList";
+    }
+
     @GetMapping("/view/{uuid}")
     public String selectBoard(Model model, @PathVariable("uuid") String uuid){
-        BoardVo view = boardService.listAllbyNum(uuid);
+        BoardVo view = boardService.view(uuid);
         model.addAttribute("view", view);
 
         return "view";
+    }
+
+    @GetMapping("/view/naver/{uuid}")
+    public String viewBoard(Model model, @PathVariable("uuid") String uuid){
+        BoardVo view = boardService.view(uuid);
+
+        model.addAttribute("view", view);
+
+        return "boardView";
     }
 
 //    @GetMapping("/edit/{uuid}") //네이버 에디터 수정
@@ -72,12 +89,21 @@ public class MainController {
 //    }
 
     @GetMapping("/edit/{uuid}")
-    public String editBoardSummer(Model model, @PathVariable("uuid") String uuid){
+    public String editBoardNaver(Model model, @PathVariable("uuid") String uuid){
         BoardVo view = boardService.listAllbyNum(uuid);
 
         model.addAttribute("view", view);
 
         return "edit";
+    }
+
+    @GetMapping("/editSummer/{uuid}")
+    public String editBoardSummer(Model model, @PathVariable("uuid") String uuid){
+        BoardVo view = boardService.listAllbyNum(uuid);
+
+        model.addAttribute("view", view);
+
+        return "summerEdit";
     }
 
 

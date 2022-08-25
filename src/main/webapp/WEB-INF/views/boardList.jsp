@@ -3,6 +3,7 @@
 <%@ taglib prefix="c"      uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form"   uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
@@ -20,39 +21,26 @@
 
 <div class="container">
     <div class="row justify-content-md-center">
-        <br>
-        <h2>Summer Editor Board</h2>
-        <br>
+        <h2>Naver Editor Board</h2>
         <table class="table">
             <tr>
-                <td>제목</td>
-                <td>${view.subject}</td>
+                <td style="width:10%; text-align: center;">번호</td>
+                <td style="width:60%; text-align: center;">제목</td>
+                <td style="width:10%; text-align: center;">작성자</td>
+                <td style="width:20%; text-align: center;">등록일</td>
             </tr>
+            <c:forEach var="board" items="${board}" varStatus="status">
             <tr>
-                <td>작성자</td>
-                <td>${view.name}</td>
+                <td style="width:10%; text-align: center;">${board.uuid}</td>
+                <td style="width:60%; text-align: center;"><a href="<c:url value='/view/naver/${board.uuid}'/>">${board.subject}</a></td>
+                <td style="width:10%; text-align: center;">${board.name}</td>
+                <td style="width:20%; text-align: center;">
+                    <fmt:formatDate value="${board.regiDate}" pattern="yyyy-MM-dd HH:mm"/></td>
             </tr>
-            <tr>
-            <td>등록일</td>
-            <td>${view.regiDate}</td>
-        </tr>
-        <tr>
-            <td>내용</td>
-            <td>${view.content}</td>
-        </tr>
-            <c:if test="${view.filePath!=null || view.attachUid!=0}">
-                <tr>
-                    <td>첨부파일</td>
-                    <td>${view.fileRealName}<br>
-                        <a href="${view.filePath}">파일열기</a></td>
-                </tr>
-            </c:if>
-
-
-        </table>
+        </c:forEach>
+    </table>
+        <button><a href="<c:url value='/editor'/>">네이버 글쓰기</a></button>
     </div>
-    <input type="button" onclick="javascript:history.back();" value="뒤로가기">&nbsp;
-    <button><a href="<c:url value='/editSummer/${view.uuid}'/>">수정하기</a></button>
 </div>
 </body>
 </html>
