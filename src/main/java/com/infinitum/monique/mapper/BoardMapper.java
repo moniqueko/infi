@@ -9,9 +9,11 @@ import java.util.List;
 @Mapper
 public interface BoardMapper {
     void boardWrite(BoardVo boardVo);
+    void deleteAttachFile(int attachUid);
+    void updateBoardAttach(BoardVo boardVo);
     List<BoardVo> listAll();
-    BoardVo listAllbyNum(String uuid);
-    BoardVo view(String uuid);
+    BoardVo listAllbyNum(int uuid);
+    BoardVo view(int uuid);
     void updateBoard(BoardVo boardVo);
     void insertAttachFile(AttachFile attachFile);
 

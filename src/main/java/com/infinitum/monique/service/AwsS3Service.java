@@ -88,10 +88,11 @@ public class AwsS3Service {
         return object; //파일이름 반환
     }
 
-    public void deleteImage(String fileName) {
+    public void deleteFile(String fileName) {
         AmazonS3 s3Client = amazonS3Client;
         s3Client.deleteObject(new DeleteObjectRequest(bucket, fileName));
     }
+
 
     private String createFileName(String fileName) {
         return UUID.randomUUID().toString().concat(getFileExtension(fileName));

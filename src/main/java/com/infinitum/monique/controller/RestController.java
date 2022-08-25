@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @org.springframework.web.bind.annotation.RestController
@@ -38,29 +39,22 @@ public class RestController {
         Map<String, Object> object = new HashMap<String, Object>();
 
             if(!boardWriter.getUploadFile().isEmpty()) {
-                //파일이름 생성/////////////
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmssSSS");
-                Calendar dateTime = Calendar.getInstance();
-                String uniqueId = sdf.format(dateTime.getTime()) + "."
-                        + boardWriter.getUploadFile().getOriginalFilename().substring(boardWriter.getUploadFile().getOriginalFilename().lastIndexOf(".") + 1);
-                ///////////////////////////
 
                 String realName = boardWriter.getUploadFile().getOriginalFilename();
                 String contentType = boardWriter.getUploadFile().getContentType();
                 String extension = boardWriter.getUploadFile().getOriginalFilename().substring(boardWriter.getUploadFile().getOriginalFilename().lastIndexOf(".") + 1);
                 long size = boardWriter.getUploadFile().getSize();
 
-                attachFile.setFileContentType(contentType);
-                attachFile.setFileName(uniqueId);
-                attachFile.setFileRealName(realName);
-                attachFile.setFileSize(size);
-                attachFile.setFileExtension(extension);
-
                 object = awsS3Service.uploadFile(boardWriter.getUploadFile());
 
                 String path = "https://moniquebucket.s3.ap-northeast-2.amazonaws.com/"+object.get("fileName").toString();
 
                 attachFile.setFilePath(path);
+                attachFile.setFileName(object.get("fileName").toString());
+                attachFile.setFileContentType(contentType);
+                attachFile.setFileRealName(realName);
+                attachFile.setFileSize(size);
+                attachFile.setFileExtension(extension);
 
                 boardVo.setFile(object.get("fileName").toString());
                 boardService.insertAttachFile(attachFile); //셀렉트키는 자동으로 attacFhile에 반환된다. (xml에 파라미터 설정을 했으므로)
@@ -144,13 +138,14 @@ public class RestController {
 
     @PostMapping(value="/deleteFileFromS3", produces = "application/json") //amazon s3
     @ResponseBody
-    public Map<String, Object> deleteFileFromS3(@RequestParam("src") String src) throws IOException {
+    public Map<String, Object> deleteFileFromS3(@RequestParam("src") String src, @RequestParam("attachUid") int attachUid, @RequestParam("uuid") int uuid) throws IOException {
         Map<String, Object> object = new HashMap<String, Object>();
+
         String fileName = getFileNameFromURL(src);
-        System.out.println(fileName+"파일이름 출력<<<<<<<<<<<<<<<<<");
 
-        awsS3Service.deleteImage(fileName);
-
+        awsS3Service.deleteFile(fileName); //S3에서 제거
+        boardService.deleteAttachFile(attachUid); //attach_file tb에서 제거
+        boardService.updateBoardAttach(uuid); //board tb 업데이트
         return object;
     }
 

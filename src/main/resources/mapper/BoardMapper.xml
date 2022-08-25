@@ -28,7 +28,13 @@
 
     <update id="updateBoard" parameterType="com.infinitum.monique.domain.BoardVo">
         UPDATE board
-        SET subject=#{subject}, content=#{content}, edit_date=NOW()
+        SET subject=#{subject}, content=#{content}, edit_date=NOW(), file=#{file}
+        WHERE uuid=#{uuid}
+    </update>
+
+    <update id="updateBoardAttach" parameterType="com.infinitum.monique.domain.BoardVo">
+        UPDATE board
+        SET edit_date=#{editDate}, file=#{file}, attach_uid=#{attachUid}
         WHERE uuid=#{uuid}
     </update>
 
@@ -41,4 +47,9 @@
             select LAST_INSERT_ID()
         </selectKey>
     </insert>
+
+    <delete id="deleteAttachFile" parameterType="com.infinitum.monique.domain.AttachFile">
+        DELETE FROM attach_file
+        WHERE attach_uid=#{attachUid}
+    </delete>
 </mapper>

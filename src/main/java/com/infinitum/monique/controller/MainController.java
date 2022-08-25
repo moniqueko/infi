@@ -63,7 +63,7 @@ public class MainController {
     }
 
     @GetMapping("/view/{uuid}")
-    public String selectBoard(Model model, @PathVariable("uuid") String uuid){
+    public String selectBoard(Model model, @PathVariable("uuid") int uuid){
         BoardVo view = boardService.view(uuid);
         model.addAttribute("view", view);
 
@@ -71,7 +71,7 @@ public class MainController {
     }
 
     @GetMapping("/view/naver/{uuid}")
-    public String viewBoard(Model model, @PathVariable("uuid") String uuid){
+    public String viewBoard(Model model, @PathVariable("uuid") int uuid){
         BoardVo view = boardService.view(uuid);
 
         model.addAttribute("view", view);
@@ -89,18 +89,16 @@ public class MainController {
 //    }
 
     @GetMapping("/edit/{uuid}")
-    public String editBoardNaver(Model model, @PathVariable("uuid") String uuid){
-        BoardVo view = boardService.listAllbyNum(uuid);
-
+    public String editBoardNaver(Model model, @PathVariable("uuid") int uuid){
+        BoardVo view = boardService.view(uuid);
         model.addAttribute("view", view);
 
         return "edit";
     }
 
     @GetMapping("/editSummer/{uuid}")
-    public String editBoardSummer(Model model, @PathVariable("uuid") String uuid){
-        BoardVo view = boardService.listAllbyNum(uuid);
-
+    public String editBoardSummer(Model model, @PathVariable("uuid") int uuid){
+        BoardVo view = boardService.view(uuid);
         model.addAttribute("view", view);
 
         return "summerEdit";

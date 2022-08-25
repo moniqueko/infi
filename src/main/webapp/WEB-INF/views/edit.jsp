@@ -16,6 +16,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 
+    <style>
+
+    </style>
     <script>
         function save(){
             oEditors.getById["txtContent"].exec("UPDATE_CONTENTS_FIELD", []);
@@ -84,6 +87,16 @@
                         <textarea id="txtContent" rows="10" cols="100" style="width:990px;">${view.content}</textarea>
                     </td>
                 </tr>
+                <tr>
+                    <td>파일첨부 </td>
+                    <td>
+                        <input type="file" name="uploadFile" id="uploadFile"><br><br>
+                        <div id="afterDel"><span>${view.fileRealName}</span><input type="button" onclick="del();" value="첨부파일 삭제">
+                        <input type="hidden" value="${view.filePath}" id="filePath">
+                            <input type="hidden" value="${view.attachUid}" id="attachUid">
+                        </div>
+                    </td>
+                </tr>
             </table>
         </form>
         <input type="button" onclick="save();" value="글 수정">
@@ -104,6 +117,43 @@
             bUseModeChanger : true
         }
     });
+</script>
+
+<script>
+    function del() {
+
+        if (!confirm("삭제후엔 되돌릴수 없습니다. 삭제하시겠습니까?")) {
+        return;
+
+        } else {
+            var src = document.getElementById("filePath").value;
+            var uuid = document.getElementById("uuid").value;
+            var attachUid = document.getElementById("attachUid").value;
+            var afterDel = document.getElementById("afterDel");
+
+            $.ajax({
+                data: {
+                    "src": src,
+                    "attachUid": attachUid,
+                    "uuid": uuid
+
+                },
+                type: "POST",
+                url: "/deleteFileFromS3",
+                // cache: false,
+                success: function (msg) {
+
+                    alert("파일이 삭제되었습니다.");
+                    afterDel.remove();
+                }
+                , error: function (request, status, error, data) {
+                    alert("Error");
+                }
+
+            });
+
+        }
+    }
 </script>
 
 </body>

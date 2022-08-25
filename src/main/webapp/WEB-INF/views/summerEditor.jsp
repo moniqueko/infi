@@ -144,24 +144,24 @@
         //     });
 
 
-        function uploadSummernoteImageFile(file, editor) { //로컬에 저장시
-            data = new FormData();
-            data.append("file", file);
-            $.ajax({
-                data : data,
-                type : "POST",
-                url : "/uploadSummernoteImageFile",
-                contentType : false,
-                processData : false,
-                success : function(data) {
-                    $(editor).summernote('insertImage', data.url); //에디터 안에 그림주소 가져와 붙여넣기
-
-                }
-                ,error:function(request,status,error, data){
-                    alert("Error");
-                }
-            });
-        }
+        // function uploadSummernoteImageFile(file, editor) { //로컬에 저장시
+        //     data = new FormData();
+        //     data.append("file", file);
+        //     $.ajax({
+        //         data : data,
+        //         type : "POST",
+        //         url : "/uploadSummernoteImageFile",
+        //         contentType : false,
+        //         processData : false,
+        //         success : function(data) {
+        //             $(editor).summernote('insertImage', data.url); //에디터 안에 그림주소 가져와 붙여넣기
+        //
+        //         }
+        //         ,error:function(request,status,error, data){
+        //             alert("Error");
+        //         }
+        //     });
+        // }
 
         function uploadSummernoteImageFileS3(file, editor) { //AWS S3업로드
             data = new FormData();

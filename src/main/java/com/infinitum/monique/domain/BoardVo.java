@@ -1,11 +1,13 @@
 package com.infinitum.monique.domain;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Date;
 
 @Data
+@NoArgsConstructor
 public class BoardVo {
     private int uuid;
     private String name;
@@ -19,4 +21,10 @@ public class BoardVo {
     private String filePath;
     private int attachUid;
 
+    public BoardVo(int uuid, String file, Date editDate, int attachUid) {
+        this.uuid = uuid;
+        this.file = file;
+        this.editDate = editDate;
+        this.attachUid = attachUid;
+    }
 }

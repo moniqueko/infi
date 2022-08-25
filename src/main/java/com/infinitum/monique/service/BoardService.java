@@ -8,11 +8,16 @@ import java.util.List;
 public interface BoardService {
 
     void boardWrite(BoardVo boardVo);
+
+    void deleteAttachFile(int attachUid);
+
     List<BoardVo> listAll();
-    BoardVo listAllbyNum(String uuid);
-    BoardVo view(String uuid);
+    BoardVo listAllbyNum(int uuid);
+    BoardVo view(int uuid);
 
     void boardUpdate(BoardVo boardVo);
 
     void insertAttachFile(AttachFile attachFile);
+
+    void updateBoardAttach(int uuid);
 }
