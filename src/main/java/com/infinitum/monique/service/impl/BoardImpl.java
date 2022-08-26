@@ -58,8 +58,11 @@ public class BoardImpl implements BoardService {
     }
 
     @Override
-    public void updateBoardAttach(int uuid) {
+    public void updateBoardAttach(int uuid) { //파일첨부 삭제시
+
         BoardVo newBoard = new BoardVo(uuid, "", new Date(),0);
         mapper.updateBoardAttach(newBoard);
+
+
     }
 }

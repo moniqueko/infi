@@ -28,7 +28,7 @@
 
     <update id="updateBoard" parameterType="com.infinitum.monique.domain.BoardVo">
         UPDATE board
-        SET subject=#{subject}, content=#{content}, edit_date=NOW(), file=#{file}
+        SET subject=#{subject}, content=#{content}, edit_date=NOW(), file=#{file}, attach_uid=#{attachUid}
         WHERE uuid=#{uuid}
     </update>
 

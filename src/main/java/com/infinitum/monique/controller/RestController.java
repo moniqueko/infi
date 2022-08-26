@@ -16,10 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @org.springframework.web.bind.annotation.RestController
 
@@ -85,15 +82,91 @@ public class RestController {
         return responseService.getSuccessResult();
     }
 
-    @PostMapping("/boardEdit")
-    public SingleResult<?> boardEdit(BoardVo boardVo, @RequestBody BoardWriter boardWriter, HttpServletRequest request) throws IOException {
-        boardVo.setContent(boardWriter.getTxtContent());
-        boardVo.setSubject(boardWriter.getTitle());
-        boardVo.setUuid(boardWriter.getUuid());
 
+    @PostMapping("/boardEditFileExist")
+    public Map<String, Object> boardEditFileExist(Model model, BoardVo boardVo, @ModelAttribute BoardWriter boardWriter, AttachFile attachFile) throws IOException {
+        Map<String, Object> object = new HashMap<String, Object>();
+
+        BoardVo beforeEdit = boardService.view(boardVo.getUuid());
+        System.out.println(beforeEdit.getFile()+"file 내용 출력");
+
+            if (beforeEdit.getAttachUid() != 0) {//테이블에 파일주소 이미 존재할때, 기존 데이터 삭제함
+
+                awsS3Service.deleteFile(beforeEdit.getFile()); //S3에서 제거
+                boardService.deleteAttachFile(beforeEdit.getAttachUid()); //attach_file tb에서 제거
+                boardService.updateBoardAttach(beforeEdit.getUuid()); //board tb 업데이트
+                System.out.println("<<<<<<<<<<<<<<<<<<<<<기존데이터 삭제완료");
+            }
+
+        String realName = boardWriter.getUploadFile().getOriginalFilename();
+        String contentType = boardWriter.getUploadFile().getContentType();
+        String extension = boardWriter.getUploadFile().getOriginalFilename().substring(boardWriter.getUploadFile().getOriginalFilename().lastIndexOf(".") + 1);
+        long size = boardWriter.getUploadFile().getSize();
+
+        object = awsS3Service.uploadFile(boardWriter.getUploadFile());
+
+        String path = "https://moniquebucket.s3.ap-northeast-2.amazonaws.com/" + object.get("fileName").toString();
+
+        attachFile.setFilePath(path);
+        attachFile.setFileName(object.get("fileName").toString());
+        attachFile.setFileContentType(contentType);
+        attachFile.setFileRealName(realName);
+        attachFile.setFileSize(size);
+        attachFile.setFileExtension(extension);
+
+        boardVo.setFile(object.get("fileName").toString());
+        boardService.insertAttachFile(attachFile); //셀렉트키는 자동으로 attacFhile에 반환된다. (xml에 파라미터 설정을 했으므로)
+        boardVo.setAttachUid(attachFile.getAttachUid());
+        boardVo.setSubject(boardWriter.getTitle());
+        boardVo.setContent(boardWriter.getTxtContent());
+        boardVo.setEditDate(new Date());
         boardService.boardUpdate(boardVo);
-        return responseService.getSuccessResult();
+
+        object.put("path", path);
+
+        return object;
+
     }
+
+    @PostMapping("/boardEditFileExist_KeepFile") //기존 첨부파일 있을때
+    public Map<String, Object> boardEditFileExist_KeepFile(Model model, BoardVo boardVo, @ModelAttribute BoardWriter boardWriter, AttachFile attachFile) throws IOException {
+        Map<String, Object> object = new HashMap<String, Object>();
+
+        boardVo.setSubject(boardWriter.getTitle());
+        boardVo.setContent(boardWriter.getTxtContent());
+        boardVo.setEditDate(new Date());
+        boardService.boardUpdate(boardVo);
+
+        return object;
+
+    }
+
+    @PostMapping("/boardEdit")//첨부파일 없을때 실행(에디터만 수정됐을때)
+    public Map<String, Object> boardEdit(Model model, BoardVo boardVo, @ModelAttribute BoardWriter boardWriter, AttachFile attachFile) throws IOException {
+        Map<String, Object> object = new HashMap<String, Object>();
+
+            boardVo.setSubject(boardWriter.getTitle());
+            boardVo.setContent(boardWriter.getTxtContent());
+            boardVo.setEditDate(new Date());
+            boardVo.setFile("");
+            boardService.boardUpdate(boardVo);
+
+            object.put("path", null);
+
+            return object;
+    }
+
+
+//파일 첨부 수정 전 edit 부분
+//    @PostMapping("/boardEdit")
+//    public SingleResult<?> boardEdit(BoardVo boardVo, @RequestBody BoardWriter boardWriter, HttpServletRequest request) throws IOException {
+//        boardVo.setContent(boardWriter.getTxtContent());
+//        boardVo.setSubject(boardWriter.getTitle());
+//        boardVo.setUuid(boardWriter.getUuid());
+//
+//        boardService.boardUpdate(boardVo);
+//        return responseService.getSuccessResult();
+//    }
 
 
 //일반 로컬에 업로드
@@ -146,6 +219,7 @@ public class RestController {
         awsS3Service.deleteFile(fileName); //S3에서 제거
         boardService.deleteAttachFile(attachUid); //attach_file tb에서 제거
         boardService.updateBoardAttach(uuid); //board tb 업데이트
+
         return object;
     }
 

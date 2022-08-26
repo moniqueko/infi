@@ -21,43 +21,127 @@
     </style>
     <script>
         function save(){
-            oEditors.getById["txtContent"].exec("UPDATE_CONTENTS_FIELD", []);
+            var attachUid = '${view.attachUid}';
+            var uploadFile = document.getElementById("uploadFile").value;
 
-            var writer = document.getElementById("writer").value;
-            var title = document.getElementById("title").value;
-            var uuid = document.getElementById("uuid").value;
-            var contents = document.getElementById("txtContent").value;
+            if(attachUid==0){ //파일첨부 없을때+에디터내용만 수정했을때
+                if(!uploadFile) {
 
-                //var form = $('#editorForm')[0];
-                //var data = new FormData(form);
+                    console.log("에디터내용만 수정했을때");
+                    oEditors.getById["txtContent"].exec("UPDATE_CONTENTS_FIELD", []);
 
-                var data = {
-                    'writer' : writer,
-                    'title': title,
-                    'txtContent': contents,
-                    'uuid' : uuid
-                };
+                    var txtContent = document.getElementById("txtContent").value;
+
+                    var form = $('#editorForm')[0];
+                    var dataForm = new FormData(form);
+
+                    dataForm.append('txtContent', txtContent); //데이터 폼에다 txtContent내용 추가해서 보내기
+
+                    $.ajax({
+                        type: "POST",
+                        url: "/boardEdit",
+                        data: dataForm,
+                        dataType: "text",
+                        //contentType: "application/json",
+                        contentType: false,
+                        processData: false,
+                        success: function (data) {
+                            alert("수정이 완료되었습니다.");
+                            location.href = "/boardList";
+                        }
+                    });
+
+                }else{
+                    console.log("첨부파일 추가시");
+                    oEditors.getById["txtContent"].exec("UPDATE_CONTENTS_FIELD", []);
+
+                    var txtContent = document.getElementById("txtContent").value;
+
+                    var form = $('#editorForm')[0];
+                    var dataForm = new FormData(form);
+                    dataForm.append('txtContent', txtContent); //데이터 폼에다 txtContent내용 추가해서 보내기
+
+                    $.ajax({
+                        type: "POST",
+                        url: "/boardEditFileExist",
+                        data: dataForm,
+                        dataType: "text",
+                        //contentType: "application/json",
+                        contentType: false,
+                        processData: false,
+                        success: function (data) {
+                            alert("수정이 완료되었습니다.");
+                            location.href = "/boardList";
+
+                        }
+                    });
+
+                }
+
+            }else if(attachUid!=0) { //이미 올라간 첨부파일 있을때
+                if(!uploadFile){
+                console.log("첨부파일있고 에디터만 수정시");
+
+                var fileName = '${view.file}';
+                var attachUid = '${view.attachUid}';
+
+                oEditors.getById["txtContent"].exec("UPDATE_CONTENTS_FIELD", []);
+
+                var txtContent = document.getElementById("txtContent").value;
+
+                var form = $('#editorForm')[0];
+                var dataForm = new FormData(form);
+                dataForm.append('txtContent', txtContent); //데이터 폼에다 txtContent내용 추가해서 보내기
+                dataForm.append('file', fileName);
+                dataForm.append('attachUid', attachUid);
 
                 $.ajax({
                     type: "POST",
-                    url: "/boardEdit",
-                    data: JSON.stringify(data),
-                    dataType: "JSON",
-                    contentType: "application/json",
-                    accept: "application/json",
-                    success: function(data) {
-                        console.log(data.message);
+                    url: "/boardEditFileExist_KeepFile",
+                    data: dataForm,
+                    dataType: "text",
+                    //contentType: "application/json",
+                    contentType: false,
+                    processData: false,
+                    success: function (data) {
                         alert("수정이 완료되었습니다.");
-                        location.href="/list";
+                        location.href = "/boardList";
 
                     },
-                    error: function(request, status, error) {
-                        console.log("ERROR : "+request.status+"\n"+"message"+request.responseText+"\n"+"error:"+error);
-
+                    error: function (request, status, error) {
+                        console.log("ERROR : " + request.status + "\n" + "message" + request.responseText + "\n" + "error:" + error);
                         alert("fail");
                     }
                 });
 
+                }else {
+                    console.log("삭제 안하고 그냥 또 추가했을때");
+                    oEditors.getById["txtContent"].exec("UPDATE_CONTENTS_FIELD", []);
+
+                    var txtContent = document.getElementById("txtContent").value;
+
+                    var form = $('#editorForm')[0];
+                    var dataForm = new FormData(form);
+                    dataForm.append('txtContent', txtContent); //데이터 폼에다 txtContent내용 추가해서 보내기
+
+                    $.ajax({
+                        type: "POST",
+                        url: "/boardEditFileExist",
+                        data: dataForm,
+                        dataType: "text",
+                        //contentType: "application/json",
+                        contentType: false,
+                        processData: false,
+                        success: function (data) {
+                            alert("수정이 완료되었습니다.");
+                            location.href = "/boardList";
+
+                        }
+                    });
+                }
+
+
+            }
         }
 
     </script>
@@ -87,16 +171,21 @@
                         <textarea id="txtContent" rows="10" cols="100" style="width:990px;">${view.content}</textarea>
                     </td>
                 </tr>
+
                 <tr>
                     <td>파일첨부 </td>
                     <td>
-                        <input type="file" name="uploadFile" id="uploadFile"><br><br>
+                        <div id="showUpload"><input type="file" name="uploadFile" id="uploadFile"> </div><br>
+                        <c:if test="${view.attachUid!=0}">
                         <div id="afterDel"><span>${view.fileRealName}</span><input type="button" onclick="del();" value="첨부파일 삭제">
-                        <input type="hidden" value="${view.filePath}" id="filePath">
+                            <input type="hidden" value="${view.filePath}" id="filePath">
                             <input type="hidden" value="${view.attachUid}" id="attachUid">
+                            <input type="hidden" value="${view.file}" id="fileName">
                         </div>
+                        </c:if>
                     </td>
                 </tr>
+
             </table>
         </form>
         <input type="button" onclick="save();" value="글 수정">
@@ -120,7 +209,7 @@
 </script>
 
 <script>
-    function del() {
+    function del() {// 첨부파일 삭제 기능
 
         if (!confirm("삭제후엔 되돌릴수 없습니다. 삭제하시겠습니까?")) {
         return;
@@ -130,6 +219,8 @@
             var uuid = document.getElementById("uuid").value;
             var attachUid = document.getElementById("attachUid").value;
             var afterDel = document.getElementById("afterDel");
+            var showUpload = document.getElementById("showUpload");
+            var getTd = document.getElementById("getTd");
 
             $.ajax({
                 data: {
@@ -145,6 +236,7 @@
 
                     alert("파일이 삭제되었습니다.");
                     afterDel.remove();
+
                 }
                 , error: function (request, status, error, data) {
                     alert("Error");
