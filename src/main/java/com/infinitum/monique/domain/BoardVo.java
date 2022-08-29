@@ -1,5 +1,6 @@
 package com.infinitum.monique.domain;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
@@ -8,6 +9,7 @@ import java.util.Date;
 
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 public class BoardVo {
     private int uuid;
     private String name;

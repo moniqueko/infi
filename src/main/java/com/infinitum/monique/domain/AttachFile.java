@@ -18,6 +18,14 @@ public class AttachFile {
     private Date fileRegiDate;        /* 등록일시 */
     private Date fileEditDate;        /* 수정일시 */
 
+    private String name;
+    private String subject;
+    private String content;
+    private String file;
+    private Date editDate;
+    private Date regiDate;
+    private int inuse;
+
     public AttachFile() {}
 
     public AttachFile(int attachUid, int uuid, String fileName, String fileRealName, long fileSize,

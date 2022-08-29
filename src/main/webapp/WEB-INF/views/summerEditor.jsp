@@ -27,7 +27,7 @@
             var title = document.getElementById("title").value;
             var contents = document.getElementById("summernote").value; //모든 태그. 이미 이미지 주소 로컬에 생성됨.
 
-                var data = {
+            var data = {
                     'writer' : writer,
                     'title': title,
                     'txtContent': contents
@@ -41,8 +41,14 @@
                     contentType: "application/json",
                     accept: "application/json",
                     success: function(data) {
+                        //리턴값 (uuid)가져와서 여기에 파일첨부등록
+                        console.log(data);
+                        console.log(data.uuid);
+                        var uuid = data.uuid;
+                        fileUpload(uuid);
+
                         alert("글쓰기 성공");
-                        location.href="/list";
+                        location.href="/summerList";
 
                     },
                     error: function(request, status, error) {
@@ -52,6 +58,30 @@
                     }
                 });
 
+        }
+
+        function fileUpload(uuid) {
+
+            var form = $('#editorForm')[0];
+            var dataForm = new FormData(form);
+            dataForm.append('uuid',uuid);
+
+            $.ajax({
+                data: dataForm,
+                processData: false,
+                contentType: false,
+                enctype: "multipart/form-data",
+                type: "POST",
+                url: "/boardSummerFileUpload",
+
+                success: function (data) {
+                    alert("글쓰기 성공");
+                }
+                , error: function (request, status, error, data) {
+                    alert("Error");
+                }
+
+            });
         }
 
     </script>
@@ -78,6 +108,13 @@
                     <td>내용 </td>
                     <td>
                         <textarea id="summernote" rows="10" cols="100" style="width:990px;"></textarea>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>파일첨부 </td>
+                    <td>
+                        <input type="file" name="uploadFiles" id="uploadFiles" multiple="multiple"><br>
                     </td>
                 </tr>
             </table>
@@ -163,7 +200,7 @@
         //     });
         // }
 
-        function uploadSummernoteImageFileS3(file, editor) { //AWS S3업로드
+        function uploadSummernoteImageFileS3(file, editor) { //AWS S3 이미지업로드
             data = new FormData();
             data.append("file", file);
             $.ajax({

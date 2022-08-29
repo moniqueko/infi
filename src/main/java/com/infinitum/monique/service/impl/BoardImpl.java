@@ -19,8 +19,16 @@ public class BoardImpl implements BoardService {
     BoardMapper mapper;
 
     @Override
-    public void boardWrite(BoardVo boardVo) {
-    mapper.boardWrite(boardVo);
+    public BoardVo boardWrite(BoardVo boardVo) {
+        mapper.boardWrite(boardVo);
+
+        return boardVo;
+    }
+
+    @Override
+    public BoardVo boardSummerWrite(BoardVo boardVo) {
+        mapper.boardSummerWrite(boardVo);
+        return boardVo;
     }
 
     @Override
@@ -36,6 +44,12 @@ public class BoardImpl implements BoardService {
     }
 
     @Override
+    public List<BoardVo> listAllSummer() {
+        List<BoardVo> board = mapper.listAllSummer();
+        return board;
+    }
+
+    @Override
     public BoardVo listAllbyNum(int uuid) {
         BoardVo board = mapper.listAllbyNum(uuid);
         return board;
@@ -45,6 +59,18 @@ public class BoardImpl implements BoardService {
     public BoardVo view(int uuid) {
         BoardVo board = mapper.view(uuid);
         return board;
+    }
+
+    @Override
+    public BoardVo viewSummer(int uuid) {
+        BoardVo board = mapper.viewSummer(uuid);
+        return board;
+    }
+
+    @Override
+    public List<AttachFile> viewAttachFiles(int uuid) {
+        List<AttachFile> attach = mapper.viewAttachFiles(uuid);
+        return attach;
     }
 
     @Override
@@ -63,6 +89,10 @@ public class BoardImpl implements BoardService {
         BoardVo newBoard = new BoardVo(uuid, "", new Date(),0);
         mapper.updateBoardAttach(newBoard);
 
+    }
 
+    @Override
+    public void insertSummerAttachFile(AttachFile attachFile) {
+        mapper.insertSummerAttachFile(attachFile);
     }
 }

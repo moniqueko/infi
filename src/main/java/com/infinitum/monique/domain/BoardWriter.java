@@ -7,6 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -17,6 +18,7 @@ public class BoardWriter implements Serializable {
     private String txtContent;
     private int uuid;
     private MultipartFile uploadFile;
+    private List<MultipartFile> uploadFiles;
 
     private int attachUid;           /* 첨부파일 식별번호 */
     private String fileName;            /* 첨부파일 이름 */

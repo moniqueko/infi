@@ -9,6 +9,7 @@
         ORDER BY regi_date desc
     </select>
 
+
     <select id="listAllbyNum" resultType="com.infinitum.monique.domain.BoardVo">
         SELECT *
         FROM board
@@ -21,9 +22,27 @@
         WHERE b.uuid=#{uuid}
     </select>
 
-    <insert id="boardWrite" parameterType="com.infinitum.monique.domain.BoardVo">
-        INSERT INTO board (uuid, name, subject, content, regi_date, edit_date, inuse, attach_uid, file)
-        VALUES(nextval(uuid_seq), #{name},#{subject},#{content},NOW(),NOW(),1, #{attachUid}, #{file})
+    <select id="viewAttachFiles" resultType="com.infinitum.monique.domain.AttachFile">
+        SELECT *
+        FROM attach_file_summer
+        WHERE uuid=#{uuid}
+    </select>
+
+<!--    <select id="viewSummer" resultType="com.infinitum.monique.domain.BoardVo">-->
+<!--        SELECT *-->
+<!--        FROM summerboard b left join attach_file_summer af on b.uuid = af.uuid-->
+<!--        WHERE b.uuid=#{uuid}-->
+<!--    </select>-->
+
+    <select id="viewSummer" resultType="com.infinitum.monique.domain.BoardVo">
+        SELECT *
+        FROM summerboard
+        WHERE uuid=#{uuid}
+    </select>
+
+    <insert id="boardWrite" parameterType="com.infinitum.monique.domain.BoardVo" useGeneratedKeys="true" keyProperty="uuid">
+        INSERT INTO board (name, subject, content, regi_date, edit_date, inuse, attach_uid, file)
+        VALUES(#{name},#{subject},#{content},NOW(),NOW(),1, #{attachUid}, #{file})
     </insert>
 
     <update id="updateBoard" parameterType="com.infinitum.monique.domain.BoardVo">
@@ -43,7 +62,7 @@
         INSERT INTO attach_file (file_name,file_real_name,file_size,file_path,file_extension,file_content_type,file_regi_date,file_edit_date)
         VALUES(#{fileName},#{fileRealName},#{fileSize},#{filePath},#{fileExtension},#{fileContentType},NOW(),NOW())
 
-        <selectKey resultType="int" keyProperty="attachUid" order="AFTER"><!--auto increment 사용해 생성된 uid 가져올때-->
+        <selectKey resultType="int" keyProperty="attachUid" order="AFTER"><!--auto increment 사용해 생성된 uid 가져올때..하지만 안좋은 방법! before로 다음 시퀀스 가져오는것으로 바꿔야함-->
             select LAST_INSERT_ID()
         </selectKey>
     </insert>
@@ -52,4 +71,22 @@
         DELETE FROM attach_file
         WHERE attach_uid=#{attachUid}
     </delete>
+
+
+    <insert id="boardSummerWrite" parameterType="com.infinitum.monique.domain.BoardVo" useGeneratedKeys="true" keyProperty="uuid">
+        INSERT INTO summerboard (name, subject, content, regi_date, edit_date, inuse)
+        VALUES(#{name},#{subject},#{content},NOW(),NOW(),1)
+    </insert>
+
+    <!-- 첨부파일 테이블 추가 썸머-->
+    <insert id="insertSummerAttachFile" parameterType="com.infinitum.monique.domain.AttachFile" useGeneratedKeys="true" keyProperty="attachUid">
+        INSERT INTO attach_file_summer (uuid, file_name,file_real_name,file_size,file_path,file_extension,file_content_type,file_regi_date,file_edit_date)
+        VALUES(#{uuid}, #{fileName},#{fileRealName},#{fileSize},#{filePath},#{fileExtension},#{fileContentType},NOW(),NOW())
+    </insert>
+
+    <select id="listAllSummer" resultType="com.infinitum.monique.domain.BoardVo">
+        SELECT *
+        FROM summerboard
+        ORDER BY regi_date desc
+    </select>
 </mapper>

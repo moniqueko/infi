@@ -7,17 +7,25 @@ import java.util.List;
 
 public interface BoardService {
 
-    void boardWrite(BoardVo boardVo);
+    BoardVo boardWrite(BoardVo boardVo);
+
+    BoardVo boardSummerWrite(BoardVo boardVo);
 
     void deleteAttachFile(int attachUid);
 
     List<BoardVo> listAll();
+
+    List<BoardVo> listAllSummer();
     BoardVo listAllbyNum(int uuid);
     BoardVo view(int uuid);
 
+    BoardVo viewSummer(int uuid);
+    List<AttachFile> viewAttachFiles(int uuid);
     void boardUpdate(BoardVo boardVo);
 
     void insertAttachFile(AttachFile attachFile);
 
     void updateBoardAttach(int uuid);
+
+    void insertSummerAttachFile(AttachFile attachFile);
 }

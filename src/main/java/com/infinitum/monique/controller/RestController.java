@@ -11,6 +11,7 @@ import com.infinitum.monique.service.ResponseService;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 
 import javax.servlet.http.HttpServletRequest;
@@ -31,7 +32,7 @@ public class RestController {
         this.awsS3Service = awsS3Service;
     }
 
-    @PostMapping("/boardWrite")
+    @PostMapping("/boardWrite")//네이버 에디터
     public Map<String, Object> boardWrite(Model model, BoardVo boardVo, @ModelAttribute BoardWriter boardWriter, AttachFile attachFile) throws IOException {
         Map<String, Object> object = new HashMap<String, Object>();
 
@@ -71,17 +72,56 @@ public class RestController {
             return object;
     }
 
-    @PostMapping("/boardWriteSummer")
-    public SingleResult<?> boardWrite(BoardVo boardVo, @RequestBody BoardWriter boardWriter, HttpServletRequest request) throws IOException {
+    @PostMapping("/boardWriteSummer") //파일첨부 외
+    public  Map<String, Object> boardWrite(BoardVo boardVo, @RequestBody BoardWriter boardWriter, HttpServletRequest request) throws IOException {
+        Map<String, Object> object = new HashMap<String, Object>();
 
         boardVo.setName(boardWriter.getWriter());
         boardVo.setContent(boardWriter.getTxtContent());
         boardVo.setSubject(boardWriter.getTitle());
 
-        boardService.boardWrite(boardVo);
-        return responseService.getSuccessResult();
-    }
+        BoardVo board = boardService.boardSummerWrite(boardVo);
 
+        object.put("uuid",board.getUuid());
+
+        return object;
+    }
+    @PostMapping("/boardSummerFileUpload") //uuid와 첨부파일만 받아온다
+    public Map<String, Object> boardSummerFileUpload(Model model, BoardVo boardVo, @ModelAttribute BoardWriter boardWriter, AttachFile attachFile) throws IOException {
+
+        Map<String, Object> object = new HashMap<String, Object>();
+        System.out.println(boardVo.getUuid() +"uuid");
+        System.out.println(boardWriter+"<<<<<<<<<<<<<<<<<<2");
+        System.out.println(boardWriter.getUploadFiles());
+
+        List<MultipartFile> mList = boardWriter.getUploadFiles();
+
+        if(!boardWriter.getUploadFiles().isEmpty()) {
+            for (MultipartFile list : mList){
+                String realName = list.getOriginalFilename();
+                String contentType =  list.getContentType();
+                String extension = list.getOriginalFilename().substring(list.getOriginalFilename().lastIndexOf(".") + 1);
+                long size = list.getSize();
+
+                object = awsS3Service.uploadFile(list);
+                System.out.println(object.get("fileName").toString()+" 파일이름 확인");
+
+                String path = "https://moniquebucket.s3.ap-northeast-2.amazonaws.com/"+object.get("fileName").toString();
+
+                attachFile.setFilePath(path);
+                attachFile.setFileName(object.get("fileName").toString());
+                attachFile.setFileContentType(contentType);
+                attachFile.setFileRealName(realName);
+                attachFile.setFileSize(size);
+                attachFile.setFileExtension(extension);
+                attachFile.setUuid(boardVo.getUuid());
+
+                boardService.insertSummerAttachFile(attachFile);
+
+            }
+        }
+        return object;
+    }
 
     @PostMapping("/boardEditFileExist")
     public Map<String, Object> boardEditFileExist(Model model, BoardVo boardVo, @ModelAttribute BoardWriter boardWriter, AttachFile attachFile) throws IOException {

@@ -1,5 +1,6 @@
 package com.infinitum.monique.controller;
 
+import com.infinitum.monique.domain.AttachFile;
 import com.infinitum.monique.domain.BoardVo;
 import com.infinitum.monique.service.BoardService;
 import com.infinitum.monique.service.ResponseService;
@@ -54,6 +55,14 @@ public class MainController {
 
         return "list";
     }
+
+    @GetMapping("/summerList")
+    public String summerList(Model model){
+        List<BoardVo> board = boardService.listAllSummer();
+        model.addAttribute("board", board);
+
+        return "summerList";
+    }
     @GetMapping("/boardList")
     public String boardListNaver(Model model){
         List<BoardVo> board = boardService.listAll();
@@ -68,6 +77,17 @@ public class MainController {
         model.addAttribute("view", view);
 
         return "view";
+    }
+
+    @GetMapping("/view/summer/{uuid}")
+    public String selectSummerBoard(Model model, @PathVariable("uuid") int uuid){
+        BoardVo view = boardService.viewSummer(uuid);
+        model.addAttribute("view", view);
+
+        List<AttachFile> attach = boardService.viewAttachFiles(uuid);
+        model.addAttribute("attach", attach);
+
+        return "summerView";
     }
 
     @GetMapping("/view/naver/{uuid}")
