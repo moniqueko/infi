@@ -1,22 +1,17 @@
 package com.infinitum.monique.controller;
 
-
 import com.infinitum.monique.domain.AttachFile;
 import com.infinitum.monique.domain.BoardVo;
 import com.infinitum.monique.domain.BoardWriter;
-import com.infinitum.monique.domain.SingleResult;
 import com.infinitum.monique.service.AwsS3Service;
 import com.infinitum.monique.service.BoardService;
 import com.infinitum.monique.service.ResponseService;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
-
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 @org.springframework.web.bind.annotation.RestController
@@ -70,6 +65,19 @@ public class RestController {
             object.put("path", null);
 
             return object;
+    }
+
+    @PostMapping("/boardWriteSummerEdit") //다중파일첨부 말고 썸머에디터 수정
+    public  Map<String, Object> boardWriteSummerEdit(BoardVo boardVo, @RequestBody BoardWriter boardWriter, HttpServletRequest request) throws IOException {
+        Map<String, Object> object = new HashMap<String, Object>();
+
+        boardVo.setContent(boardWriter.getTxtContent());
+        boardVo.setSubject(boardWriter.getTitle());
+        boardVo.setUuid(boardWriter.getUuid());
+
+        boardService.updateBoardSummer(boardVo);
+
+        return object;
     }
 
     @PostMapping("/boardWriteSummer") //파일첨부 외
@@ -266,6 +274,20 @@ public class RestController {
     public static String getFileNameFromURL(String url) {
         return url.substring(url.lastIndexOf('/') + 1, url.length());
 
+    }
+
+    @PostMapping(value="/deleteSummerFileFromS3", produces = "application/json") //amazon s3
+    @ResponseBody
+    public Map<String, Object> deleteSummerFileFromS3(@RequestParam("attachUid") int attachUid) throws IOException {
+        Map<String, Object> object = new HashMap<String, Object>();
+
+        AttachFile attach = boardService.viewAttachFileByuid(attachUid);
+        String fileName = getFileNameFromURL(attach.getFilePath());
+
+        awsS3Service.deleteFile(fileName); //S3에서 제거
+        boardService.deleteSummerAttachFile(attachUid); //attach_file tb에서 제거
+
+        return object;
     }
 
 }

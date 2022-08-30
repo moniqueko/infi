@@ -124,6 +124,17 @@ public class MainController {
         return "summerEdit";
     }
 
+    @GetMapping("/editSummerEditor/{uuid}") //다중파일 업로드용
+    public String editSummer(Model model, @PathVariable("uuid") int uuid){
+        BoardVo view = boardService.viewSummer(uuid);
+        model.addAttribute("view", view);
+
+        List<AttachFile> attach = boardService.viewAttachFiles(uuid);
+        model.addAttribute("attach", attach);
+
+        return "summerEditorEdit";
+    }
+
 
 
 

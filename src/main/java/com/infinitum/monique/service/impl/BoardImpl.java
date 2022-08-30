@@ -95,4 +95,20 @@ public class BoardImpl implements BoardService {
     public void insertSummerAttachFile(AttachFile attachFile) {
         mapper.insertSummerAttachFile(attachFile);
     }
+
+    @Override
+    public void deleteSummerAttachFile(int attachUid) {
+        mapper.deleteSummerAttachFile(attachUid);
+    }
+
+    @Override
+    public void updateBoardSummer(BoardVo boardVo) {
+        mapper.updateBoardSummer(boardVo);
+    }
+
+    @Override
+    public AttachFile viewAttachFileByuid(int attachUid) {
+        AttachFile attach = mapper.viewAttachFileByuid(attachUid);
+        return attach;
+    }
 }

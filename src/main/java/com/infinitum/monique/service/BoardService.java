@@ -28,4 +28,9 @@ public interface BoardService {
     void updateBoardAttach(int uuid);
 
     void insertSummerAttachFile(AttachFile attachFile);
+
+    void deleteSummerAttachFile(int attachUid);
+    void updateBoardSummer(BoardVo boardVo);
+    AttachFile viewAttachFileByuid(int attachUid);
+
 }

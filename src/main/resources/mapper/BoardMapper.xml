@@ -28,6 +28,12 @@
         WHERE uuid=#{uuid}
     </select>
 
+    <select id="viewAttachFileByuid" resultType="com.infinitum.monique.domain.AttachFile">
+        SELECT *
+        FROM attach_file_summer
+        WHERE attach_uid=#{attachUid}
+    </select>
+
 <!--    <select id="viewSummer" resultType="com.infinitum.monique.domain.BoardVo">-->
 <!--        SELECT *-->
 <!--        FROM summerboard b left join attach_file_summer af on b.uuid = af.uuid-->
@@ -72,7 +78,6 @@
         WHERE attach_uid=#{attachUid}
     </delete>
 
-
     <insert id="boardSummerWrite" parameterType="com.infinitum.monique.domain.BoardVo" useGeneratedKeys="true" keyProperty="uuid">
         INSERT INTO summerboard (name, subject, content, regi_date, edit_date, inuse)
         VALUES(#{name},#{subject},#{content},NOW(),NOW(),1)
@@ -89,4 +94,15 @@
         FROM summerboard
         ORDER BY regi_date desc
     </select>
+
+    <delete id="deleteSummerAttachFile" parameterType="com.infinitum.monique.domain.AttachFile">
+        DELETE FROM attach_file_summer
+        WHERE attach_uid=#{attachUid}
+    </delete>
+
+    <update id="updateBoardSummer" parameterType="com.infinitum.monique.domain.BoardVo">
+        UPDATE summerboard
+        SET subject=#{subject}, content=#{content}, edit_date=NOW()
+        WHERE uuid=#{uuid}
+    </update>
 </mapper>

@@ -24,5 +24,9 @@ public interface BoardMapper {
     void updateBoard(BoardVo boardVo);
     void insertAttachFile(AttachFile attachFile);
     void insertSummerAttachFile(AttachFile attachFile);
+    void deleteSummerAttachFile(int attachUid);
+    void updateBoardSummer(BoardVo boardVo);
+
+    AttachFile viewAttachFileByuid(int attachUid);
 
 }
