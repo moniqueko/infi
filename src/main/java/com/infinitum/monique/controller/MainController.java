@@ -2,6 +2,8 @@ package com.infinitum.monique.controller;
 
 import com.infinitum.monique.domain.AttachFile;
 import com.infinitum.monique.domain.BoardVo;
+import com.infinitum.monique.domain.Criteria;
+import com.infinitum.monique.domain.PageMaker;
 import com.infinitum.monique.service.BoardService;
 import com.infinitum.monique.service.ResponseService;
 import com.infinitum.monique.service.Schedule;
@@ -9,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -56,14 +59,38 @@ public class MainController {
         return "list";
     }
 
-    @GetMapping("/summerList")
-    public String summerList(Model model){
-        List<BoardVo> board = boardService.listAllSummer();
-        model.addAttribute("board", board);
+    @GetMapping("/summerList")//여기에만 페이징, 검색 적용
+    public String summerList(@RequestParam(value="keyword",required = false) String keyword, Model model, Criteria cri) {
+        if (keyword == null) {
 
+            List<BoardVo> board = boardService.listAllSummer(cri);
+            model.addAttribute("board", board);
+
+            PageMaker pm = new PageMaker();
+            pm.setCri(cri);
+            pm.setTotalCount(boardService.selectCount());
+
+            model.addAttribute("pm", pm);
+
+            return "summerList";
+
+        } else if (keyword != null) {
+            model.addAttribute("board", boardService.listAllSummer(cri)); //criteria에 keyword 포함.
+
+            PageMaker pm = new PageMaker();
+            pm.setCri(cri);
+            pm.setKeyword(keyword);
+            pm.setTotalCount(boardService.selectCountPaging(keyword));
+
+            model.addAttribute("pm", pm);
+            model.addAttribute("keyword", keyword);
+
+            return "summerList";
+        }
         return "summerList";
     }
-    @GetMapping("/boardList")
+
+        @GetMapping("/boardList")
     public String boardListNaver(Model model){
         List<BoardVo> board = boardService.listAll();
         model.addAttribute("board", board);

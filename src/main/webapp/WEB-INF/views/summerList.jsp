@@ -41,6 +41,63 @@
     </table>
         <button><a href="<c:url value='/summerEditor'/>">글쓰기</a></button>
     </div>
+
+    <div style="text-align: right">
+        <form:form action="summerList" method="GET">
+            <input type="text" name="keyword" id="keyword" placeholder="제목">
+            <input type="submit" value="검색">&nbsp;&nbsp;
+            <input type="button" value="목록보기" onclick="location.href='../summerList'">
+        </form:form>
+    </div>
+
+    <div class="row justify-content-md-center">
+        <c:if test="${keyword==null}">
+            <div class="text-center">
+                <ul class="pagination">
+                    <!-- 이전prev -->
+                    <c:if test="${pm.prev }">
+                        <li><a href="/summerList?page=${pm.startPage-1}">[&laquo;]</a></li>
+                    </c:if>
+                    <!-- 페이지블럭 -->
+                    <c:forEach var="idx" begin="${pm.startPage }" end="${pm.endPage }">
+                        <!-- 삼항연산자를 사용해서 class로 스타일적용  -->
+                        <li ${pm.cri.page == idx? 'class=active':''}>
+                            <a href="/summerList?page=${idx }">[&nbsp;${idx}&nbsp;]&nbsp;&nbsp;</a>
+                        </li>
+                    </c:forEach>
+                    <!-- 다음next -->
+                    <c:if test="${pm.next && pm.endPage > 0}">
+                        <li><a href="/summerList?page=${pm.endPage+1}">[&raquo;]</a></li>
+                    </c:if>
+                </ul>
+            </div>
+        </c:if>
+
+        <!-- 키워드 있을 시 -->
+
+        <c:if test="${keyword!=null}">
+            <div class="text-center">
+                <ul class="pagination">
+                    <!-- 이전prev -->
+                    <c:if test="${pm.prev }">
+                        <li><a href="/summerList?keyword=${keyword}&page=${pm.startPage-1}">[&laquo;]</a></li>
+                    </c:if>
+                    <!-- 페이지블럭 -->
+                    <c:forEach var="idx" begin="${pm.startPage }" end="${pm.endPage }">
+                        <!-- 삼항연산자를 사용해서 class로 스타일적용  -->
+                        <li ${pm.cri.page == idx? 'class=active':''}>
+                            <a href="/summerList?keyword=${keyword}&page=${idx }">[&nbsp;${idx}&nbsp;]&nbsp;&nbsp;</a>
+                        </li>
+                    </c:forEach>
+                    <!-- 다음next -->
+                    <c:if test="${pm.next && pm.endPage > 0}">
+                        <li><a href="/summerList?keyword=${keyword}&page=${pm.endPage+1}">[&raquo;]</a></li>
+                    </c:if>
+                </ul>
+            </div>
+        </c:if>
+
+    </div>
 </div>
 </body>
 </html>

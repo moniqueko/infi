@@ -92,8 +92,31 @@
     <select id="listAllSummer" resultType="com.infinitum.monique.domain.BoardVo">
         SELECT *
         FROM summerboard
+        WHERE inuse=1
+        <include refid="search"></include>
         ORDER BY regi_date desc
+        limit #{pageStart},#{pageSize}
     </select>
+
+    <select id="selectCount" resultType="int">
+        SELECT count(*)
+        FROM summerboard
+    </select>
+
+    <select id="selectCountPaging"  parameterType="String" resultType="int">
+        SELECT count(*)
+        FROM summerboard
+        WHERE inuse=1
+        <if test="_parameter != null and _parameter !=''">
+            AND subject LIKE CONCAT('%',#{_parameter},'%')
+        </if>
+    </select>
+
+    <sql id="search">
+        <if test="keyword != null and keyword !=''">
+            AND subject LIKE CONCAT('%',#{keyword},'%')
+        </if>
+    </sql>
 
     <delete id="deleteSummerAttachFile" parameterType="com.infinitum.monique.domain.AttachFile">
         DELETE FROM attach_file_summer

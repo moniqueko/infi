@@ -2,6 +2,7 @@ package com.infinitum.monique.service.impl;
 
 import com.infinitum.monique.domain.AttachFile;
 import com.infinitum.monique.domain.BoardVo;
+import com.infinitum.monique.domain.Criteria;
 import com.infinitum.monique.mapper.BoardMapper;
 import com.infinitum.monique.service.BoardService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,8 +45,8 @@ public class BoardImpl implements BoardService {
     }
 
     @Override
-    public List<BoardVo> listAllSummer() {
-        List<BoardVo> board = mapper.listAllSummer();
+    public List<BoardVo> listAllSummer(Criteria cri) {
+        List<BoardVo> board = mapper.listAllSummer(cri);
         return board;
     }
 
@@ -110,5 +111,17 @@ public class BoardImpl implements BoardService {
     public AttachFile viewAttachFileByuid(int attachUid) {
         AttachFile attach = mapper.viewAttachFileByuid(attachUid);
         return attach;
+    }
+
+    @Override
+    public int selectCount() {
+        int count = mapper.selectCount();
+        return count;
+    }
+
+    @Override
+    public int selectCountPaging(String keyword) {
+        int count = mapper.selectCountPaging(keyword);
+        return count;
     }
 }

@@ -2,6 +2,7 @@ package com.infinitum.monique.mapper;
 
 import com.infinitum.monique.domain.AttachFile;
 import com.infinitum.monique.domain.BoardVo;
+import com.infinitum.monique.domain.Criteria;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -16,7 +17,10 @@ public interface BoardMapper {
     List<BoardVo> listAll();
 
     List<AttachFile> viewAttachFiles(int uuid);
-    List<BoardVo> listAllSummer();
+    List<BoardVo> listAllSummer(Criteria cri);
+
+    int selectCount();
+
     BoardVo listAllbyNum(int uuid);
     BoardVo view(int uuid);
     BoardVo viewSummer(int uuid);
@@ -28,5 +32,7 @@ public interface BoardMapper {
     void updateBoardSummer(BoardVo boardVo);
 
     AttachFile viewAttachFileByuid(int attachUid);
+
+    int selectCountPaging(String keyword);
 
 }

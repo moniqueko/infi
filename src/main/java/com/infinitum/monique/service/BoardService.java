@@ -2,6 +2,7 @@ package com.infinitum.monique.service;
 
 import com.infinitum.monique.domain.AttachFile;
 import com.infinitum.monique.domain.BoardVo;
+import com.infinitum.monique.domain.Criteria;
 
 import java.util.List;
 
@@ -15,7 +16,7 @@ public interface BoardService {
 
     List<BoardVo> listAll();
 
-    List<BoardVo> listAllSummer();
+    List<BoardVo> listAllSummer(Criteria cri);
     BoardVo listAllbyNum(int uuid);
     BoardVo view(int uuid);
 
@@ -32,5 +33,9 @@ public interface BoardService {
     void deleteSummerAttachFile(int attachUid);
     void updateBoardSummer(BoardVo boardVo);
     AttachFile viewAttachFileByuid(int attachUid);
+
+    int selectCount();
+    int selectCountPaging(String keyword);
+
 
 }
